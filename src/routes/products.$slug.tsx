@@ -14,6 +14,9 @@ import {
   Package,
   Layers,
   MapPin,
+  Mail,
+  MessageSquare,
+  Phone,
 } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -327,27 +330,19 @@ function ProductDetailPage() {
                   <span className="text-[#252525]/50">({reviews.length} Verified Reviews)</span>
                 </div>
 
-                {/* Pricing Box */}
-                <div className="mt-4 flex items-baseline gap-3 border-y border-[#226192]/10 py-3">
-                  <span className="text-3xl font-extrabold text-[#226192]">
-                    ₹{selectedVariant.price}
-                  </span>
-                  {selectedVariant.mrp > selectedVariant.price && (
-                    <span className="text-sm text-[#252525]/50 line-through">
-                      MRP ₹{selectedVariant.mrp}
-                    </span>
-                  )}
+                {/* Style Specifications Summary */}
+                <div className="mt-4 flex flex-wrap items-center gap-2 border-y border-[#226192]/10 py-3 text-xs">
+                  <span className="font-semibold text-[#226192]">Style Details:</span>
                   <span className="rounded-none border border-[#EF8557] bg-[#EF8557]/10 px-2 py-0.5 text-xs font-bold text-[#EF8557]">
-                    Save ₹{selectedVariant.mrp - selectedVariant.price} (
-                    {Math.round(
-                      ((selectedVariant.mrp - selectedVariant.price) / selectedVariant.mrp) * 100,
-                    )}
-                    % OFF)
+                    {p.gender}
+                  </span>
+                  <span className="rounded-none border border-[#226192]/20 bg-[#EAE6DE]/50 px-2 py-0.5 text-xs font-semibold text-[#226192]">
+                    {p.category}
+                  </span>
+                  <span className="text-[11px] text-[#252525]/70">
+                    Tirupur Mill Quality · 100% Bio-Washed
                   </span>
                 </div>
-                <p className="text-[10px] text-[#252525]/60 mt-1">
-                  Inclusive of all taxes. Free shipping across India on orders above ₹999.
-                </p>
 
                 {/* ═══ COLOUR VARIANT SELECTOR ═══ */}
                 <div className="mt-6">
@@ -451,155 +446,49 @@ function ProductDetailPage() {
                   )}
                 </div>
 
-                {/* Live Price, MRP & GST Tax Breakdown Panel */}
-                <div className="mt-5 border border-[#226192]/25 bg-[#EAE6DE]/50 p-4 text-xs space-y-1.5">
-                  <div className="flex items-center justify-between border-b border-[#226192]/15 pb-1.5">
-                    <span className="font-bold uppercase tracking-wider text-[#226192]">
-                      Price & GST Breakdown ({qty} {qty === 1 ? "Unit" : "Units"})
-                    </span>
-                    <span className="font-mono text-[10px] text-[#EF8557] font-bold">
-                      GST Slab: {gst.gstRate}%
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#252525]/75">Total MRP Value:</span>
-                    <span className="line-through text-[#252525]/60">₹{gst.totalMrp}</span>
-                  </div>
-                  <div className="flex justify-between text-emerald-700 font-semibold">
-                    <span>Promotional Offer Savings ({gst.discountPercent}% Off):</span>
-                    <span>-₹{gst.discountAmount}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#252525]/75">Taxable Base Value (Excl. GST):</span>
-                    <span>₹{gst.taxableValue}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#252525]/75">
-                      CGST ({gst.gstRate / 2}%) + SGST ({gst.gstRate / 2}%):
-                    </span>
-                    <span>
-                      ₹{gst.cgstAmount} + ₹{gst.sgstAmount} = ₹{gst.gstAmount}
-                    </span>
-                  </div>
-                  <div className="flex justify-between border-t border-[#226192]/20 pt-2 font-extrabold text-sm text-[#226192]">
-                    <span>Final Booking Price (Incl. GST):</span>
-                    <span>₹{gst.totalPrice}</span>
-                  </div>
-                </div>
-
-                {/* Quantity and Booking Actions */}
-                <div className="mt-5 space-y-3">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="flex items-center border border-[#226192]/30 bg-[#FFFFFF] shrink-0 h-11">
-                      <button
-                        type="button"
-                        onClick={() => setQty(Math.max(1, qty - 1))}
-                        className="px-3.5 h-full text-base font-bold text-[#226192] hover:bg-[#EAE6DE] transition-colors"
-                        aria-label="Decrease quantity"
-                      >
-                        -
-                      </button>
-                      <span className="w-9 text-center text-sm font-bold">{qty}</span>
-                      <button
-                        type="button"
-                        onClick={() => setQty(Math.min(liveStock, qty + 1))}
-                        className="px-3.5 h-full text-base font-bold text-[#226192] hover:bg-[#EAE6DE] transition-colors"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
+                {/* ═══ FACTORY INQUIRY & CONTACT ACTIONS ═══ */}
+                <div className="mt-6 space-y-3 border-t border-[#226192]/15 pt-5">
+                  <div className="border border-[#226192]/20 bg-[#EAE6DE]/40 p-4 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold uppercase tracking-wider text-[#226192]">
+                        Direct Mill &amp; Product Desk
+                      </span>
+                      <span className="text-[10px] font-bold text-[#EF8557] uppercase tracking-wide">
+                        Tirupur Integrated Facility
+                      </span>
                     </div>
-
-                    <Button
-                      type="button"
-                      onClick={handleAddToCart}
-                      className="flex-1 min-w-0 rounded-none border-2 border-[#226192] bg-[#226192] h-11 px-3 sm:px-4 text-xs font-bold uppercase tracking-wider text-[#FFFFFF] hover:bg-[#18466b] transition-all cursor-pointer"
-                    >
-                      {addedToast ? "✓ Reserved in List!" : "Add to Booking List"}
-                    </Button>
-
-                    <button
-                      type="button"
-                      onClick={handleToggleWishlist}
-                      className={`size-11 shrink-0 flex items-center justify-center border transition-all ${
-                        isWishlisted
-                          ? "border-[#EF8557] bg-[#EF8557] text-[#FFFFFF]"
-                          : "border-[#226192]/30 bg-[#FFFFFF] text-[#226192] hover:border-[#EF8557] hover:text-[#EF8557]"
-                      }`}
-                      title={isWishlisted ? "In Wishlist" : "Save to Wishlist"}
-                      aria-label="Save to Wishlist"
-                    >
-                      <Heart className={`size-5 ${isWishlisted ? "fill-current" : ""}`} />
-                    </button>
+                    <p className="text-xs text-[#252525]/80 leading-relaxed">
+                      Manufactured by Muthu International Private Limited (Est. 2000). Contact our Tirupur operations desk directly for fabric specifications, custom production runs, and wholesale orders.
+                    </p>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={handleBuyNow}
-                    className="w-full rounded-none border border-[#EF8557] bg-[#EF8557] h-12 text-xs font-bold uppercase tracking-widest text-[#FFFFFF] hover:bg-[#d97346] shadow-sm flex items-center justify-center gap-2 transition-all cursor-pointer select-none"
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                    <Link
+                      to="/contact"
+                      search={{ subject: `Inquiry: ${p.name} (${p.brandName})` }}
+                      className="flex items-center justify-center gap-2 border border-[#226192] bg-[#226192] px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#FFFFFF] hover:bg-[#18466b] transition-all"
+                    >
+                      <Mail className="size-4" />
+                      <span>Product Inquiry</span>
+                    </Link>
+
+                    <Link
+                      to="/wholesale"
+                      className="flex items-center justify-center gap-2 border border-[#EF8557] bg-[#EF8557] px-4 py-3 text-xs font-bold uppercase tracking-wider text-[#FFFFFF] hover:bg-[#d97346] transition-all"
+                    >
+                      <span>Wholesale Quote</span>
+                    </Link>
+                  </div>
+
+                  <a
+                    href={`https://wa.me/919787806802?text=${encodeURIComponent(`Hello Muthu International, I would like to inquire about ${p.name} (${p.brandName}) - SKU: ${selectedVariant.sku}.`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 border border-emerald-600 bg-emerald-600 text-white px-4 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-emerald-700 transition-colors"
                   >
-                    <span>BOOK STOCK NOW</span>
-                    <span className="text-base font-bold">→</span>
-                  </button>
-                </div>
-
-                <p className="mt-3 text-[11px] text-[#226192]/80 font-medium">
-                  ✦ Promotional Booking: No payment gateway needed. Confirm your booking to hold
-                  stock & notify <strong>{COMPANY_OWNER_EMAIL}</strong>.
-                </p>
-
-                {/* ═══ PIN CODE GEO-SHIPPING ESTIMATOR ═══ */}
-                <div className="mt-8 border-t border-[#226192]/15 pt-6">
-                  <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#226192]">
-                    <MapPin className="size-3.5 text-[#EF8557]" />
-                    <span>Check Delivery & Geo-Shipping Fee</span>
-                  </span>
-
-                  <form onSubmit={handleCalculateShipping} className="mt-2.5 flex gap-2">
-                    <Input
-                      type="text"
-                      maxLength={6}
-                      value={checkPin}
-                      onChange={(e) => setCheckPin(e.target.value)}
-                      placeholder="Enter 6-digit PIN Code..."
-                      className="h-10 rounded-none border-[#226192]/30 bg-[#FFFFFF] text-xs font-mono"
-                    />
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      className="h-10 rounded-none border-[#226192] text-xs font-bold uppercase text-[#226192] hover:bg-[#226192] hover:text-[#FFFFFF]"
-                    >
-                      Check
-                    </Button>
-                  </form>
-
-                  {shippingResult && (
-                    <div className="mt-3 border border-[#226192]/20 bg-[#EAE6DE]/60 p-3 text-xs space-y-1">
-                      <div className="flex items-center justify-between font-bold text-[#226192]">
-                        <span>
-                          Delivery to {shippingResult.city} ({shippingResult.pinCode}):
-                        </span>
-                        <span className="text-[#EF8557]">
-                          {shippingResult.isFreeShipping
-                            ? "FREE"
-                            : `₹${shippingResult.discountedFee}`}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-[#252525]/75">
-                        Zone: {shippingResult.zoneName} · Est: {shippingResult.estimatedDays}
-                      </p>
-                      {!shippingResult.isFreeShipping && (
-                        <p className="text-[10px] text-emerald-700 font-semibold">
-                          Add ₹
-                          {Math.max(
-                            0,
-                            shippingResult.freeShippingThreshold - selectedVariant.price * qty,
-                          )}{" "}
-                          more for 100% Free Shipping!
-                        </p>
-                      )}
-                    </div>
-                  )}
+                    <MessageSquare className="size-4" />
+                    <span>WhatsApp Mill Desk: +91 97878 06802</span>
+                  </a>
                 </div>
 
                 {/* Quality Guarantees */}

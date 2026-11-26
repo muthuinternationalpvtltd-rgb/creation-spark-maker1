@@ -1,18 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, Clock, ArrowRight, Send } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Mail, Phone, MapPin, ArrowRight, Send, BriefcaseBusiness } from "lucide-react";
 import { InquiryForm, Reveal } from "@/components/site";
 import {
   COMPANY_ADDRESS_CITY,
   COMPANY_ADDRESS_LINE1,
-  COMPANY_CONTACT_PERSON,
-  COMPANY_GSTIN,
   COMPANY_LANDLINE,
   COMPANY_NAME,
   COMPANY_OWNER_EMAIL,
   COMPANY_PRIMARY_MOBILE,
   COMPANY_SECONDARY_EMAIL,
   COMPANY_SECONDARY_MOBILE,
-  images,
 } from "@/lib/content";
 
 export const Route = createFileRoute("/contact")({
@@ -38,136 +35,115 @@ export const Route = createFileRoute("/contact")({
 });
 
 function ContactPage() {
-  const channels = [
-    {
-      icon: MapPin,
-      title: "Factory & Headquarters",
-      lines: [
-        COMPANY_NAME,
-        COMPANY_ADDRESS_LINE1,
-        COMPANY_ADDRESS_CITY,
-        `GST No: ${COMPANY_GSTIN}`,
-      ],
-      sub: "Avinashi Road, Tirupur Knitwear Hub",
-    },
-    {
-      icon: Phone,
-      title: "Phone & WhatsApp",
-      lines: [COMPANY_PRIMARY_MOBILE, COMPANY_SECONDARY_MOBILE, `Ph: ${COMPANY_LANDLINE}`],
-      sub: `${COMPANY_CONTACT_PERSON} · Direct Owner & Factory Desk`,
-    },
-    {
-      icon: Mail,
-      title: "Official Company Email",
-      lines: [COMPANY_OWNER_EMAIL, COMPANY_SECONDARY_EMAIL],
-      sub: "Stock bookings, wholesale & retail inquiries",
-    },
-    {
-      icon: Clock,
-      title: "Operating Hours",
-      lines: ["Monday – Saturday: 9:00 AM – 6:30 PM (IST)"],
-      sub: "Serving customers across India",
-    },
-  ];
-
   return (
     <div className="bg-[#EAE6DE] text-[#252525]">
-      {/* ═══ SPLIT HERO — IMAGE LEFT, WARM IVORY CONTENT RIGHT ═══ */}
-      <section className="relative min-h-[70vh] overflow-hidden border-b border-[#226192]/20 bg-[#EAE6DE]">
-        <div className="grid min-h-[70vh] lg:grid-cols-2">
-          {/* Left: Full image */}
-          <div className="relative hidden lg:block">
-            <img
-              src={images.pageContact}
-              alt="Muthu International office reception"
-              className="absolute inset-0 size-full object-cover"
-              loading="eager"
-              decoding="async"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#EAE6DE]/30" />
+      <section
+        className="relative isolate overflow-hidden border-b border-[#226192]/15 bg-[#EAE6DE] pt-36 pb-28 sm:pt-40 sm:pb-32"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(34,97,146,0.055) 1px, transparent 1px), linear-gradient(90deg, rgba(34,97,146,0.055) 1px, transparent 1px)",
+          backgroundSize: "64px 64px",
+        }}
+      >
+        <div className="page-shell hero-copy">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#226192]/20 bg-[#FFFFFF]/70 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">
+            <span className="size-2 rounded-full bg-[#EF8557]" />
+            Connect With Us
           </div>
-
-          {/* Right: Content on Warm Ivory */}
-          <div className="flex items-center px-8 py-32 lg:px-16 xl:px-24">
-            <div className="max-w-lg">
-              <div className="inline-flex items-center gap-2 border border-[#226192]/25 bg-[#FFFFFF] px-3.5 py-1 text-xs font-bold tracking-widest text-[#226192] uppercase shadow-sm">
-                <span className="size-2 bg-[#EF8557]" />
-                <span>Contact Factory Desk · Tirupur Hub</span>
-              </div>
-
-              <h1 className="mt-6 font-serif text-4xl font-bold uppercase leading-tight tracking-tight text-[#252525] sm:text-5xl lg:text-6xl">
-                Let's build a
-                <br />
-                <span className="text-[#EF8557]">partnership.</span>
-              </h1>
-
-              <p className="mt-6 text-base leading-relaxed text-[#252525]/85">
-                Looking for an established kidswear manufacturer in India? Our team welcomes
-                enquiries about our products, manufacturing capabilities and business opportunities.
-              </p>
-
-              <div className="mt-8 flex items-center gap-6 border-t border-[#226192]/20 pt-6">
-                <div className="text-center">
-                  <p className="font-['Space_Grotesk'] text-2xl font-extrabold text-[#EF8557]">
-                    25+
-                  </p>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#252525]/70">
-                    Years
-                  </p>
-                </div>
-                <div className="h-8 w-px bg-[#226192]/20" />
-                <div className="text-center">
-                  <p className="font-['Space_Grotesk'] text-2xl font-extrabold text-[#EF8557]">2</p>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#252525]/70">
-                    Factories
-                  </p>
-                </div>
-                <div className="h-8 w-px bg-[#226192]/20" />
-                <div className="text-center">
-                  <p className="font-['Space_Grotesk'] text-2xl font-extrabold text-[#EF8557]">
-                    100+
-                  </p>
-                  <p className="text-[9px] font-bold uppercase tracking-wider text-[#252525]/70">
-                    Employees
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          <h1 className="mt-7 max-w-[13ch] text-[clamp(3rem,7vw,4.25rem)] leading-[0.98] tracking-[-0.035em] text-[#252525]">
+            Get in Touch with Muthu International.
+          </h1>
+          <p className="mt-7 max-w-[48rem] text-lg leading-[1.65] text-[#252525]/80 sm:text-[21px]">
+            Whether you are exploring our kidswear collections, enquiring about a product or looking
+            for wholesale and manufacturing opportunities, our team is here to help you with clear
+            information and personal assistance.
+          </p>
+          <a
+            href="#enquiry"
+            className="group mt-9 inline-flex h-14 items-center gap-4 bg-[#226192] px-7 text-xs font-bold uppercase tracking-[0.16em] text-[#FFFFFF] transition-all duration-300 hover:bg-[#EF8557]"
+          >
+            Send an enquiry
+            <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+          </a>
         </div>
       </section>
 
-      {/* ═══ CONTACT CARDS — HORIZONTAL STRIP ═══ */}
-      <section className="relative -mt-8 z-10 pb-8">
+      <section className="py-20 sm:py-24">
         <div className="page-shell">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {channels.map((c) => {
-              const Icon = c.icon;
-              return (
-                <Reveal key={c.title}>
-                  <div className="group border border-[#226192]/10 bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                    <div className="flex size-10 items-center justify-center rounded-lg bg-[#226192]/5 text-[#EF8557] transition-colors group-hover:bg-[#EF8557] group-hover:text-white">
-                      <Icon className="size-5" />
-                    </div>
-                    <h3 className="mt-4 text-xs font-bold uppercase tracking-wider text-[#226192]">
-                      {c.title}
-                    </h3>
-                    {c.lines.map((line) => (
-                      <p key={line} className="mt-1 text-sm text-[#252525]/85">
-                        {line}
-                      </p>
-                    ))}
-                    <p className="mt-2 text-[11px] text-[#EF8557]">{c.sub}</p>
-                  </div>
-                </Reveal>
-              );
-            })}
+          <Reveal>
+            <div className="mb-12 max-w-3xl">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#EF8557]">
+                Direct Access
+              </p>
+              <h2 className="mt-4 text-4xl leading-[1.08] text-[#226192] sm:text-5xl">
+                We&apos;re Just a Conversation Away.
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid border-y border-[#226192]/18 sm:grid-cols-2 lg:grid-cols-4">
+            <Reveal className="border-b border-[#226192]/18 sm:odd:border-r lg:border-b-0 lg:border-r lg:last:border-r-0">
+              <a href={`tel:${COMPANY_PRIMARY_MOBILE.replace(/[^+0-9]/g, "")}`} className="group flex min-h-72 flex-col p-6 sm:p-8">
+                <Phone className="size-6 text-[#EF8557]" />
+                <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">Call Our Team</p>
+                <div className="mt-4 space-y-1 text-base leading-relaxed text-[#252525]/85">
+                  <p>{COMPANY_PRIMARY_MOBILE}</p>
+                  <p>{COMPANY_SECONDARY_MOBILE}</p>
+                  <p>Landline: {COMPANY_LANDLINE}</p>
+                </div>
+                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-xs font-bold uppercase tracking-[0.12em] text-[#226192]">
+                  Call now <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </a>
+            </Reveal>
+
+            <Reveal className="border-b border-[#226192]/18 sm:even:border-l sm:odd:border-r lg:border-b-0 lg:border-r lg:last:border-r-0">
+              <a href={`mailto:${COMPANY_OWNER_EMAIL}`} className="group flex min-h-72 flex-col p-6 sm:p-8">
+                <Mail className="size-6 text-[#EF8557]" />
+                <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">Email Us</p>
+                <div className="mt-4 space-y-1 break-all text-base leading-relaxed text-[#252525]/85">
+                  <p>{COMPANY_OWNER_EMAIL}</p>
+                  <p>{COMPANY_SECONDARY_EMAIL}</p>
+                </div>
+                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-xs font-bold uppercase tracking-[0.12em] text-[#226192]">
+                  Write to us <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </a>
+            </Reveal>
+
+            <Reveal className="border-b border-[#226192]/18 sm:border-b-0 sm:odd:border-r lg:border-r lg:last:border-r-0">
+              <div className="flex min-h-72 flex-col p-6 sm:p-8">
+                <MapPin className="size-6 text-[#EF8557]" />
+                <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">Visit Our Office</p>
+                <div className="mt-4 space-y-1 text-base leading-relaxed text-[#252525]/85">
+                  <p>{COMPANY_NAME}</p>
+                  <p>{COMPANY_ADDRESS_LINE1}</p>
+                  <p>{COMPANY_ADDRESS_CITY}</p>
+                </div>
+              </div>
+            </Reveal>
+
+            <Reveal>
+              <div className="flex min-h-72 flex-col p-6 sm:p-8">
+                <BriefcaseBusiness className="size-6 text-[#EF8557]" />
+                <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">Business Enquiries</p>
+                <p className="mt-4 text-base leading-relaxed text-[#252525]/85">Bulk, wholesale and manufacturing opportunities.</p>
+                <div className="mt-auto flex flex-col items-start gap-3 pt-8">
+                  <Link to="/wholesale" className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-[#226192]">
+                    Wholesale <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                  <Link to="/request-quote" className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.12em] text-[#226192]">
+                    Request Quote <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* ═══ CONTACT FORM — CLEAN WIDE LAYOUT ═══ */}
-      <section className="bg-[#EAE6DE] py-20 sm:py-28">
+      <section id="enquiry" className="scroll-mt-32 bg-[#EAE6DE] py-20 sm:py-28">
         <div className="page-shell">
           <div className="grid gap-12 lg:grid-cols-12">
             {/* Left info panel */}
@@ -191,19 +167,6 @@ function ContactPage() {
                   <p className="mt-2 text-sm leading-relaxed text-[#252525]/80">
                     Kidswear manufacturing, fresh designs and quality-focused customer partnerships.
                   </p>
-                </div>
-
-                {/* Map placeholder */}
-                <div className="mt-8 aspect-[4/3] overflow-hidden border border-[#226192]/10 bg-[#226192]/5">
-                  <div className="flex size-full flex-col items-center justify-center text-center">
-                    <MapPin className="size-8 text-[#226192]/30" />
-                    <p className="mt-2 text-xs font-bold uppercase tracking-wider text-[#226192]/50">
-                      Asher Nagar, Avinashi Road, Tirupur - 641603
-                    </p>
-                    <p className="mt-1 text-[10px] text-[#252525]/50">
-                      14/2, North 1st Street · India&apos;s Knitwear Capital
-                    </p>
-                  </div>
                 </div>
               </Reveal>
             </div>

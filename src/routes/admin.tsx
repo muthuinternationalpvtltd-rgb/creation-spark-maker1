@@ -611,17 +611,7 @@ function AdminDashboardPage() {
         {/* ═══ 2. ORDER MANAGEMENT ═══ */}
         {activeSection === "orders" && (
           <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-[#226192]/10 pb-4">
-              <div className="flex items-center gap-2 max-w-sm flex-1">
-                <Input
-                  type="text"
-                  placeholder="Search booking #, email, customer, city..."
-                  value={orderSearch}
-                  onChange={(e) => setOrderSearch(e.target.value)}
-                  className="h-9 rounded-none text-xs"
-                />
-              </div>
-
+            <div className="flex items-center justify-end gap-4 border-b border-[#226192]/10 pb-4">
               <div className="flex items-center gap-2 text-xs">
                 <span className="font-semibold text-[#252525]/70">Status:</span>
                 <select

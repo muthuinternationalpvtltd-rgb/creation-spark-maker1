@@ -167,61 +167,26 @@ export function SiteHeader() {
   // Filtered search results
   const searchResults = searchQuery.trim()
     ? products
-        .filter((p) => {
-          const matchesQuery =
-            p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
-          const matchesBrand =
-            searchBrandFilter === "all" ||
-            p.brandId.toLowerCase() === searchBrandFilter.toLowerCase();
-          return matchesQuery && matchesBrand;
-        })
-        .slice(0, 6)
+      .filter((p) => {
+        const matchesQuery =
+          p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
+        const matchesBrand =
+          searchBrandFilter === "all" ||
+          p.brandId.toLowerCase() === searchBrandFilter.toLowerCase();
+        return matchesQuery && matchesBrand;
+      })
+      .slice(0, 6)
     : [];
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 bg-[#FFFFFF] shadow-sm transition-all duration-300">
-        {/* ═══ LEVEL 1: CORPORATE ANNOUNCEMENT STRIP WITH MARQUEE ═══ */}
-        <div className="w-full bg-[#18466b] text-[#FFFFFF] border-b border-[#2d628d] px-4 py-1.5 text-xs font-medium overflow-hidden">
-          <MarqueeTag
-            behavior="scroll"
-            direction="left"
-            scrollamount="6"
-            className="w-full text-white text-[11px] sm:text-xs font-medium tracking-wide flex items-center"
-          >
-            <span className="inline-flex items-center gap-6 whitespace-nowrap">
-              <span className="inline-flex items-center gap-1.5">
-                <span className="size-2 bg-[#EF8557] inline-block shrink-0" />
-                <strong>MUTHU INTERNATIONAL PRIVATE LIMITED</strong> · 25+ Years Garment Heritage · Tirupur - 641603
-              </span>
-              <span className="text-[#EF8557]">✦</span>
-              <Link to="/account" className="hover:text-[#EF8557] inline-flex items-center gap-1">
-                <Truck className="size-3.5 text-[#EF8557] inline" />
-                <span>Track Booking (By Email / ID)</span>
-              </Link>
-              <span className="text-[#EF8557]">✦</span>
-              <a href="tel:+919787806802" className="hover:text-[#EF8557] inline-flex items-center gap-1">
-                <Phone className="size-3.5 text-[#EF8557] inline" />
-                <span>Wholesale &amp; Direct Mill Hotline: <strong>+91 97878 06802</strong> / +91 94432 38068 (Ph: 0421-4248068)</span>
-              </a>
-              <span className="text-[#EF8557]">✦</span>
-              <span>GSTIN: <strong>33AARCM6569Q1ZD</strong></span>
-              <span className="text-[#EF8557]">✦</span>
-              <span>4 In-House Houses: Kids Korner · X-Zone · H&amp;D Club · Boy Munna</span>
-              <span className="text-[#EF8557]">✦</span>
-              <span>Direct Factory Stock Reservation — Zero Online Payment Gateway Required</span>
-              <span className="text-[#EF8557]">✦</span>
-              <span>Factory 01: 14/2, Asher Nagar · Factory 02: Avinashi Road, Tirupur - 641603</span>
-            </span>
-          </MarqueeTag>
-        </div>
-
-        {/* ═══ LEVEL 2: SPACIOUS MASTHEAD ═══ */}
-        <div className="w-full bg-[#FFFFFF] border-b border-[#D8D2C5] px-4 sm:px-8 py-3">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 lg:gap-8">
+      <header className="fixed inset-x-0 top-0 z-50 bg-[#FFFFFF] border-b-0 transition-all duration-300">
+        {/* ═══ PRIMARY CONSOLIDATED NAVIGATION BAR WITH LOGO ═══ */}
+        <div className="w-full bg-[#FFFFFF] border-b-0 px-4 sm:px-8">
+          <div className="max-w-7xl mx-auto flex items-center justify-between py-2.5 sm:py-3 gap-4">
             {/* Logo Lockup */}
             <Link
               to="/"
@@ -231,136 +196,13 @@ export function SiteHeader() {
               <img
                 src={images.muthuCompanyLogo}
                 alt="Muthu International Private Ltd"
-                className="h-10 sm:h-12 w-auto object-contain mix-blend-multiply"
+                className="h-9 sm:h-11 w-auto object-contain mix-blend-multiply"
                 loading="eager"
               />
             </Link>
 
-            {/* Center: Integrated Wide Editorial Search Bar */}
-            <div className="hidden md:flex flex-1 max-w-xl relative">
-              <div className="w-full flex items-center border border-[#D8D2C5] bg-[#F7F3EB] focus-within:border-[#226192] focus-within:bg-[#FFFFFF] transition-all">
-                <select
-                  value={searchBrandFilter}
-                  onChange={(e) => setSearchBrandFilter(e.target.value)}
-                  className="pl-3 pr-2 py-2 text-[11px] font-semibold text-[#252525] border-r border-[#D8D2C5] bg-transparent outline-none cursor-pointer"
-                  aria-label="Filter search by label"
-                >
-                  <option value="all">All Labels</option>
-                  <option value="kids-korner">Kids Korner</option>
-                  <option value="x-zone">X-Zone</option>
-                  <option value="hd-club">H&D Club</option>
-                  <option value="boy-munna">Boy Munna</option>
-                </select>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    if (e.target.value.trim()) setSearchOpen(true);
-                  }}
-                  onFocus={() => {
-                    if (searchQuery.trim()) setSearchOpen(true);
-                  }}
-                  placeholder="Search across Kids Korner, X-Zone, H&D Club, Boy Munna..."
-                  className="w-full bg-transparent px-3 py-2 text-xs text-[#252525] placeholder:text-[#717880] focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={() => setSearchOpen(true)}
-                  aria-label="Search"
-                  className="px-3.5 py-2 text-[#226192] hover:text-[#EF8557] transition-colors"
-                >
-                  <Search className="size-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Right: Utility Actions (Track, Wishlist, Booking List, Mobile Toggle) */}
-            <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-              {/* Mobile Search Button */}
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                className="flex md:hidden size-9 items-center justify-center border border-[#226192]/25 bg-[#FFFFFF] text-[#226192] hover:text-[#EF8557]"
-                aria-label="Open search modal"
-              >
-                <Search className="size-4" />
-              </button>
-
-              {/* Track Bookings */}
-              <Link
-                to="/account"
-                className="hidden sm:flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#252525] hover:text-[#226192] transition-colors"
-                title="Track Bookings by Email or Booking ID"
-              >
-                <Package className="size-4 text-[#226192]" />
-                <span className="hidden xl:inline text-[11px]">Track Bookings</span>
-              </Link>
-
-              {/* Wishlist */}
-              <Link
-                to="/account"
-                search={{ tab: "wishlist" }}
-                className="group relative flex items-center gap-1.5 text-[#252525] hover:text-[#EF8557] transition-colors py-1 px-1"
-                aria-label={`Wishlist (${wishlistCount} items)`}
-              >
-                <div className="relative flex items-center justify-center">
-                  <Heart className="size-5 text-[#226192] transition-colors group-hover:text-[#EF8557]" />
-                  {wishlistCount > 0 && (
-                    <span className="absolute -top-1.5 -right-2 min-w-[17px] h-[17px] px-1 rounded-full bg-[#EF8557] text-[#FFFFFF] text-[10px] font-bold flex items-center justify-center shadow-xs border border-white">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </div>
-                <span className="hidden xl:inline text-xs font-semibold uppercase tracking-wider">
-                  Wishlist
-                </span>
-              </Link>
-
-              {/* Prominent Booking List Badge in Coral */}
-              <Link
-                to="/cart"
-                className="relative flex items-center gap-3 bg-[#EF8557] hover:bg-[#d97346] text-[#FFFFFF] pl-3.5 pr-4 py-2 text-xs font-bold uppercase tracking-wider transition-all shadow-sm group select-none"
-                aria-label={`Booking List (${cartCount} items)`}
-              >
-                <div className="relative flex items-center justify-center shrink-0">
-                  <ClipboardList className="size-5" />
-                  {cartCount > 0 && (
-                    <span className="absolute -top-2 -right-2.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#18466b] text-[#FFFFFF] text-[10px] font-extrabold flex items-center justify-center shadow-sm border-2 border-[#EF8557]">
-                      {cartCount}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-col text-left leading-tight">
-                  <span className="text-[10px] opacity-95 tracking-wide font-semibold">Booking List</span>
-                  <span className="font-mono text-xs font-bold">
-                    ₹{cartSubtotal > 0 ? cartSubtotal.toLocaleString("en-IN") : "0"}
-                  </span>
-                </div>
-              </Link>
-
-              {/* Mobile Hamburger Toggle */}
-              <Button
-                variant="ghost"
-                size="icon"
-                className="rounded-none border border-[#226192]/30 text-[#226192] hover:bg-[#226192]/10 lg:hidden"
-                onClick={() => setOpen(!open)}
-                aria-label={open ? "Close menu" : "Open menu"}
-              >
-                {open ? <X className="size-5 text-[#EF8557]" /> : <Menu className="size-5" />}
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* ═══ LEVEL 3: BRAND & CATEGORY BAR WITH MEGA MENU ═══ */}
-        <div className="hidden lg:block w-full bg-[#EAE6DE] border-b border-[#D8D2C5] px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            {/* Left Balance Spacer */}
-            <div className="w-28 hidden xl:block shrink-0" />
-
             <nav
-              className="flex items-center justify-center gap-6 xl:gap-10 py-2.5 mx-auto flex-1"
+              className="hidden lg:flex items-center justify-center gap-6 xl:gap-9 mx-auto flex-1"
               aria-label="Brand and Category Navigation"
             >
               <Link
@@ -399,7 +241,7 @@ export function SiteHeader() {
                     to="/brands"
                     className={cn(
                       pathname.startsWith("/brands") &&
-                        "text-[#226192] font-bold after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#EF8557]",
+                      "text-[#226192] font-bold after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#EF8557]",
                     )}
                   >
                     Our Brands
@@ -521,23 +363,34 @@ export function SiteHeader() {
               </Link>
             </nav>
 
-            {/* Right: Owner Admin Portal Link */}
-            <div className="w-28 flex justify-end shrink-0">
+            {/* Right: Owner Admin Portal Link & Mobile Hamburger */}
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <Link
                 to="/admin"
-                className="flex items-center gap-1.5 border border-[#226192]/30 bg-[#FFFFFF] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#226192] hover:bg-[#226192] hover:text-[#FFFFFF] transition-colors"
+                className="hidden sm:flex items-center gap-1.5 border border-[#226192]/30 bg-[#FFFFFF] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#226192] hover:bg-[#226192] hover:text-[#FFFFFF] transition-colors"
                 title="Director & Admin Operations Desk"
               >
                 <ShieldCheck className="size-3 text-[#EF8557]" />
                 <span>Owner Admin</span>
               </Link>
+
+              {/* Mobile Hamburger Toggle */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="rounded-none border border-[#226192]/30 text-[#226192] hover:bg-[#226192]/10 lg:hidden"
+                onClick={() => setOpen(!open)}
+                aria-label={open ? "Close menu" : "Open menu"}
+              >
+                {open ? <X className="size-5 text-[#EF8557]" /> : <Menu className="size-5" />}
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Spacer to prevent content overlap */}
-      <div className="h-32 sm:h-36" />
+      <div className="h-[54px] sm:h-[60px] bg-[#FFFFFF]" />
 
       {/* ═══ LIVE SEARCH MODAL POPUP ═══ */}
       {searchOpen && (
@@ -1217,20 +1070,6 @@ export function ProductCard({
             </div>
           )}
 
-          {/* Wishlist Button */}
-          <button
-            type="button"
-            onClick={handleToggleWishlist}
-            className={`absolute right-2.5 bottom-2.5 z-10 flex size-8 items-center justify-center rounded-none border transition-all ${
-              isWishlisted
-                ? "border-[#EF8557] bg-[#EF8557] text-[#FFFFFF]"
-                : "border-[#226192]/30 bg-[#FFFFFF]/90 text-[#226192] hover:border-[#EF8557] hover:text-[#EF8557]"
-            }`}
-            title={isWishlisted ? "Remove from Wishlist" : "Add to Wishlist"}
-            aria-label="Wishlist"
-          >
-            <Heart className={cn("size-4", isWishlisted && "fill-current")} />
-          </button>
         </div>
 
         {/* Card Content */}
@@ -1269,52 +1108,14 @@ export function ProductCard({
             )}
           </div>
 
-          {/* Pricing & Cart Action */}
+          {/* Product Details Action */}
           <div className="mt-4 border-t border-[#226192]/15 pt-3 flex items-center justify-between">
-            <div>
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-base font-extrabold text-[#226192]">₹{product.price}</span>
-                {product.mrp > product.price && (
-                  <span className="text-xs text-[#252525]/50 line-through">₹{product.mrp}</span>
-                )}
-              </div>
-              <span className="block text-[9px] text-[#252525]/60">Inclusive of GST</span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              {onQuickView && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onQuickView(product);
-                  }}
-                  className="flex size-8 items-center justify-center border border-[#226192]/30 text-[#226192] hover:border-[#EF8557] hover:text-[#EF8557] transition-colors"
-                  title="Quick View"
-                >
-                  <Eye className="size-3.5" />
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={handleQuickAdd}
-                className="flex h-8 items-center gap-1 border border-[#226192] bg-[#226192] px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#FFFFFF] transition-all hover:border-[#EF8557] hover:bg-[#EF8557]"
-              >
-                {addedToast ? (
-                  <>
-                    <Check className="size-3 text-[#FFFFFF]" />
-                    <span>Reserved</span>
-                  </>
-                ) : (
-                  <>
-                    <BookmarkCheck className="size-3" />
-                    <span>Reserve</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#226192] group-hover:text-[#EF8557] transition-colors">
+              Explore Style Details
+            </span>
+            <span className="flex size-7 items-center justify-center border border-[#226192]/30 text-[#226192] group-hover:bg-[#226192] group-hover:text-[#FFFFFF] transition-all">
+              <ArrowRight className="size-3.5" />
+            </span>
           </div>
         </div>
       </Link>
@@ -1425,18 +1226,16 @@ export function SizeGuideModal({
             <button
               type="button"
               onClick={() => setUnit("inches")}
-              className={`px-3 py-1 text-xs font-bold ${
-                unit === "inches" ? "bg-[#226192] text-[#FFFFFF]" : "bg-[#FFFFFF] text-[#226192]"
-              }`}
+              className={`px-3 py-1 text-xs font-bold ${unit === "inches" ? "bg-[#226192] text-[#FFFFFF]" : "bg-[#FFFFFF] text-[#226192]"
+                }`}
             >
               Inches
             </button>
             <button
               type="button"
               onClick={() => setUnit("cm")}
-              className={`px-3 py-1 text-xs font-bold ${
-                unit === "cm" ? "bg-[#226192] text-[#FFFFFF]" : "bg-[#FFFFFF] text-[#226192]"
-              }`}
+              className={`px-3 py-1 text-xs font-bold ${unit === "cm" ? "bg-[#226192] text-[#FFFFFF]" : "bg-[#FFFFFF] text-[#226192]"
+                }`}
             >
               Centimeters
             </button>
@@ -1623,11 +1422,10 @@ function QuickViewModalInner({ product, onClose }: { product: Product; onClose: 
                         key={col}
                         type="button"
                         onClick={() => match && setSelectedVariant(match)}
-                        className={`border px-2.5 py-1 text-xs font-semibold ${
-                          selectedVariant.colour === col
+                        className={`border px-2.5 py-1 text-xs font-semibold ${selectedVariant.colour === col
                             ? "border-[#EF8557] bg-[#FFFFFF] text-[#EF8557] ring-1 ring-[#EF8557]"
                             : "border-[#226192]/20 bg-[#FFFFFF]/70 text-[#252525] hover:border-[#226192]"
-                        }`}
+                          }`}
                       >
                         {col}
                       </button>
@@ -1652,11 +1450,10 @@ function QuickViewModalInner({ product, onClose }: { product: Product; onClose: 
                         key={s}
                         type="button"
                         onClick={() => match && setSelectedVariant(match)}
-                        className={`border px-2.5 py-1 text-xs font-semibold ${
-                          selectedVariant.size === s
+                        className={`border px-2.5 py-1 text-xs font-semibold ${selectedVariant.size === s
                             ? "border-[#226192] bg-[#226192] text-[#FFFFFF]"
                             : "border-[#226192]/20 bg-[#FFFFFF] text-[#226192] hover:border-[#EF8557]"
-                        }`}
+                          }`}
                       >
                         {s}
                       </button>
@@ -2118,5 +1915,44 @@ export function GalleryWithLightbox({ items }: { items: GalleryItem[] }) {
         </div>
       )}
     </>
+  );
+}
+
+export function CorporateMarquee({ className = "" }: { className?: string }) {
+  const MarqueeTag = "marquee" as unknown as React.ElementType;
+  return (
+    <div className={cn("w-full bg-[#18466b] text-white py-3 border-y border-[#2d628d] overflow-hidden select-none", className)}>
+      <MarqueeTag
+        behavior="scroll"
+        direction="left"
+        scrollamount="6"
+        className="w-full text-white text-[11px] sm:text-xs font-bold tracking-widest uppercase flex items-center"
+      >
+        <span className="inline-flex items-center gap-6 sm:gap-8 whitespace-nowrap">
+          <span className="inline-flex items-center gap-2">
+            <span className="size-2 bg-[#EF8557] rounded-full inline-block" />
+            MUTHU INTERNATIONAL PRIVATE LIMITED
+          </span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>ESTABLISHED 2000 IN TIRUPUR</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>25+ YEARS GARMENT HERITAGE</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>4 IN-HOUSE HOUSES: KIDS KORNER · X-ZONE · H&amp;D CLUB · BOY MUNNA</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>100% BIO-WASHED COMBED COTTON</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>OEKO-TEX CERTIFIED SKIN-SAFE DYES</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>DIRECT FACTORY STOCK RESERVATION — ZERO ONLINE PAYMENT GATEWAY REQUIRED</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>HOTLINE: +91 97878 06802 / +91 94432 38068 (PH: 0421-4248068)</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>GSTIN: 33AARCM6569Q1ZD</span>
+          <span className="text-[#EF8557]">✦</span>
+          <span>FACTORY 01: 14/2, ASHER NAGAR · FACTORY 02: AVINASHI ROAD, TIRUPUR - 641603</span>
+        </span>
+      </MarqueeTag>
+    </div>
   );
 }
