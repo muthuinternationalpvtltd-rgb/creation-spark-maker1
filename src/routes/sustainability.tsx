@@ -14,26 +14,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/sustainability")({
-  head: () => ({
-    meta: [
-      { title: "Sustainable & Ethical Kidswear Manufacturing | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Explore Muthu International's commitment to eco-conscious garment crafting: organic cotton fibers, non-toxic AZO-free dyes, solar-supported facilities, and child-safe ethical standards.",
-      },
-      { property: "og:title", content: "Eco-Conscious Kidswear Production | Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "Pure for little skin, gentle on our planet. Discover our responsible textile stewardship and zero liquid discharge water treatment.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Sustainable & Ethical Kidswear Manufacturing | Muthu International Private Limited",
+      description:
+        "Explore Muthu International Private Limited's commitment to responsible kidswear manufacturing: combed cotton, AZO-free dyes, and child-safe production practices.",
+      path: "/sustainability",
+      ogTitle: "Sustainable Kidswear Manufacturing | Muthu International",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Sustainability", path: "/sustainability" },
+      ],
+    }),
   component: SustainabilityPage,
 });
 

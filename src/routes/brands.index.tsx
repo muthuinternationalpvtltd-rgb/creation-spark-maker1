@@ -2,20 +2,22 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Sparkles, Layers, ShieldCheck } from "lucide-react";
 import { BrandCard, Reveal, SectionHeading } from "@/components/site";
 import { brandsList, images } from "@/lib/content";
+import { buildSeoHead, buildOrganizationJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/brands/")({
-  head: () => ({
-    meta: [
-      { title: "Our 4 Brands Portfolio | Kids Korner & Muthu International" },
-      {
-        name: "description",
-        content:
-          "Discover our four specialized kidswear brands: Kids Korner (Flagship), X-Zone (Athleisure), H&D Club (Boutique Tailoring), and Boy Munna (Original Registered Character).",
-      },
-      { property: "og:title", content: "Muthu International 4 Brands Portfolio" },
-      { property: "og:type", content: "website" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Our 4 Kidswear Brands | Kids Korner, X-Zone, H&D Club & Boy Munna | Muthu International",
+      description:
+        "Discover Muthu International's four specialized kidswear brands: Kids Korner everyday cotton wear, X-Zone athleisure streetwear, H&D Club boutique occasion sets, and Boy Munna character-led clothing. All manufactured in Tirupur.",
+      path: "/brands",
+      ogTitle: "Our 4 Kidswear Brands | Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Our Brands", path: "/brands" },
+      ],
+      extraJsonLd: [buildOrganizationJsonLd()],
+    }),
   component: BrandsIndexPage,
 });
 

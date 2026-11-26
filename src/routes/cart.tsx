@@ -19,18 +19,17 @@ import {
   applyCouponCode,
   type CartItem,
 } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/cart")({
-  head: () => ({
-    meta: [
-      { title: "Stock Booking List | Kids Korner Promotional Catalog" },
-      {
-        name: "description",
-        content:
-          "Review your selected kidswear garments, sizes, colours, and full MRP + GST tax breakdown before confirming your stock reservation.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Booking List | Muthu International Private Limited",
+      description:
+        "Review your selected kidswear garments, sizes, colours, and MRP + GST breakdown.",
+      path: "/cart",
+      noindex: true,
+    }),
   component: CartPage,
 });
 

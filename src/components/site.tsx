@@ -652,9 +652,9 @@ export function SiteFooter() {
           <div className="flex items-center gap-3">
             <BookmarkCheck className="size-5 text-[#EF8557]" />
             <span>
-              <strong>Promotional Catalogue & Direct Stock Booking:</strong> Select sizes, colours &
-              quantities with transparent MRP + GST breakdown — reserve stock directly via email
-              without online payment!
+              <strong>Promotional Catalogue &amp; Direct Factory Enquiries:</strong> Explore sizes, colours &amp;
+              quantities with transparent MRP + GST breakdown — enquire directly via email with our
+              Tirupur factory desk!
             </span>
           </div>
           <div className="flex items-center gap-4 text-[11px] font-semibold text-[#EAE6DE]/80">

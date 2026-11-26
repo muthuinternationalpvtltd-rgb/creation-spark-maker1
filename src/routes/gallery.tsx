@@ -2,26 +2,21 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Camera, Filter } from "lucide-react";
 import { CTASection, GalleryWithLightbox, Reveal, SectionHeading } from "@/components/site";
 import { gallery, images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/gallery")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear & Atelier Gallery | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Visual archive of Muthu International: explore factory stitching lines, printing stations, embroidery detail, finished kidswear styles, and quality inspection in Tirupur, India.",
-      },
-      { property: "og:title", content: "Inside Muthu International | Manufacturing Gallery" },
-      {
-        property: "og:description",
-        content:
-          "High-definition photography of kidswear product development, factory floor, and craftsmanship.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Manufacturing & Kidswear Gallery | Muthu International Private Limited",
+      description:
+        "Visual archive of Muthu International Private Limited: explore factory stitching lines, printing stations, embroidery detail, and finished kidswear styles in Tirupur, India.",
+      path: "/gallery",
+      ogTitle: "Inside Muthu International | Manufacturing Gallery",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Gallery", path: "/gallery" },
+      ],
+    }),
   component: GalleryPage,
 });
 

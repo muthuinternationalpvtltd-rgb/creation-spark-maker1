@@ -4,26 +4,21 @@ import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, ScrollMedia, SectionHeading } from "@/components/site";
 import { images, manufacturingStages } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/manufacturing")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear Manufacturing Process | Muthu International Atelier" },
-      {
-        name: "description",
-        content:
-          "Learn about Muthu International's kidswear manufacturing infrastructure: two operational factories, modern machinery, a dedicated warehouse and an experienced workforce.",
-      },
-      { property: "og:title", content: "Kidswear Manufacturing Process at Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "Over 25 years of garment industry experience, with facilities and design capability serving customers across India.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Kidswear Manufacturing Infrastructure | Muthu International Private Limited",
+      description:
+        "Learn about Muthu International Private Limited's Tirupur kidswear manufacturing infrastructure: two operational factories, modern machinery, a dedicated warehouse, and 100+ employees.",
+      path: "/manufacturing",
+      ogTitle: "Kidswear Manufacturing Infrastructure | Muthu International",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Manufacturing", path: "/manufacturing" },
+      ],
+    }),
   component: ManufacturingPage,
 });
 

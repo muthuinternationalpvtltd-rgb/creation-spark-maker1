@@ -46,18 +46,17 @@ import {
   fetchCentralSheetDataFn,
   type EmailConfigStatus,
 } from "@/lib/booking-server";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/admin")({
-  head: () => ({
-    meta: [
-      { title: "E-Commerce Admin Dashboard | Kids Korner Platform" },
-      {
-        name: "description",
-        content:
-          "Management console for brands, variant inventory, customer orders, and wholesale leads.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Owner Admin Console | Muthu International Private Limited",
+      description:
+        "Private management console for Muthu International Private Limited.",
+      path: "/admin",
+      noindex: true,
+    }),
   component: AdminDashboardPage,
 });
 

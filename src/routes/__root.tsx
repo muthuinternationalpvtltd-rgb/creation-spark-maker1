@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteFooter, SiteHeader } from "../components/site";
+import { buildOrganizationJsonLd, buildWebSiteJsonLd } from "../lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -98,6 +99,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(buildOrganizationJsonLd()),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify(buildWebSiteJsonLd()),
+      },
     ],
   }),
   shellComponent: RootShell,

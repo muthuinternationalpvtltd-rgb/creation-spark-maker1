@@ -20,30 +20,24 @@ import {
   images,
   products,
   brandsList,
-  CartStore,
   WishlistStore,
   type Product,
 } from "@/lib/content";
+import { buildSeoHead, buildOrganizationJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Muthu International | Luxury Kidswear E-Commerce & B2B Portal" },
-      {
-        name: "description",
-        content:
-          "Four independent kidswear labels manufactured by Muthu International: Kids Korner, X-Zone, H&D Club, and Boy Munna. Rooted in Tirupur since 2000.",
-      },
-      { property: "og:title", content: "Muthu International | Editorial Kidswear Atelier" },
-      {
-        property: "og:description",
-        content:
-          "Cinematic fashion lookbook, interactive coordinate studio, and direct mill stock booking for premium children's clothing.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Muthu International Private Limited | Kids Korner, X-Zone, H&D Club & Boy Munna Kidswear Manufacturer",
+      description:
+        "Muthu International Private Limited is a Tirupur-based kidswear manufacturer since 2000, producing four brands: Kids Korner, X-Zone, H&D Club, and Boy Munna. Bio-washed combed cotton children's clothing for retail and wholesale partners across India.",
+      path: "/",
+      ogTitle: "Muthu International Private Limited | 4 Kidswear Brands from Tirupur",
+      ogDescription:
+        "Four specialized kidswear brands — Kids Korner everyday wear, X-Zone athleisure, H&D Club boutique, and Boy Munna character clothing — backed by in-house design and two manufacturing facilities in Tirupur since 2000.",
+      ogType: "website",
+      extraJsonLd: [buildOrganizationJsonLd()],
+    }),
   component: HomePage,
 });
 
@@ -105,55 +99,10 @@ export function HomePage() {
   const [selectedTopId, setSelectedTopId] = useState<string>("crew");
   const [selectedBottomId, setSelectedBottomId] = useState<string>("chino");
   const [lookbookSize, setLookbookSize] = useState<string>("4-5Y");
-  const [lookbookAdded, setLookbookAdded] = useState(false);
 
   const selectedTop = (topOptions.find((t) => t.id === selectedTopId) || topOptions[0])!;
   const selectedBottom = (bottomOptions.find((b) => b.id === selectedBottomId) || bottomOptions[0])!;
   const lookbookTotal = selectedTop.price + selectedBottom.price;
-
-  // Add Coordinate Studio Set to Booking List
-  const handleAddLookbookSet = () => {
-    CartStore.addItem({
-      productId: `studio-${selectedTop.id}-${selectedBottom.id}`,
-      variantId: `studio-${selectedTop.id}-${selectedBottom.id}-${lookbookSize}`,
-      productSlug: "botanical-summer-co-ord-set",
-      productName: `SS25 Studio Coordinate: ${selectedTop.name} + ${selectedBottom.name}`,
-      brandId: "kids-korner",
-      brandName: selectedTop.label,
-      sku: `STUDIO-${selectedTop.id.toUpperCase()}-${selectedBottom.id.toUpperCase()}`,
-      size: lookbookSize,
-      colour: "Tirupur Natural Dye",
-      colourHex: "#226192",
-      price: lookbookTotal,
-      mrp: Math.round(lookbookTotal * 1.35),
-      quantity: 1,
-      maxStock: 20,
-      image: selectedTop.image,
-    });
-    setLookbookAdded(true);
-    setTimeout(() => setLookbookAdded(false), 2500);
-  };
-
-  // Add Boy Munna Set
-  const handleAddMunnaSet = () => {
-    CartStore.addItem({
-      productId: "boy-munna-dino-explorer",
-      variantId: "boy-munna-dino-explorer-3y",
-      productSlug: "boy-munna-dino-explorer-playset",
-      productName: "Boy Munna Official Adventure Set (With Mini Comic)",
-      brandId: "boy-munna",
-      brandName: "Boy Munna",
-      sku: "BM-DINO-EXPLORER",
-      size: "3Y",
-      colour: "Mustard & Forest Green",
-      colourHex: "#EF8557",
-      price: 449,
-      mrp: 699,
-      quantity: 1,
-      maxStock: 30,
-      image: images.hero,
-    });
-  };
 
   return (
     <div className="w-full bg-[#EAE6DE] text-[#252525]">
@@ -165,7 +114,7 @@ export function HomePage() {
         <div className="absolute inset-0 z-0">
           <img
             src={images.bloomHero}
-            alt="Muthu International kidswear fashion campaign"
+            alt="Muthu International kidswear fashion campaign – Kids Korner, X-Zone, H&D Club, Boy Munna collections from Tirupur"
             className="w-full h-full object-cover object-center brightness-[0.78] contrast-[1.05]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#0d2a41]/90 via-[#0d2a41]/50 to-transparent" />
@@ -274,7 +223,7 @@ export function HomePage() {
                 <div className="relative aspect-[16/10] overflow-hidden bg-[#F7F3EB] mb-6 border border-[#D8D2C5]">
                   <img
                     src={images.editorial}
-                    alt="Kids Korner candid lifestyle shoot"
+                    alt="Kids Korner everyday cotton kidswear lifestyle – flagship brand by Muthu International"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
                   <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur-sm border border-[#D8D2C5] p-2.5 shadow-md flex items-center gap-2">
@@ -333,7 +282,7 @@ export function HomePage() {
                     <div className="sm:col-span-5 aspect-[4/3] bg-[#F7F3EB] overflow-hidden border border-[#D8D2C5]">
                       <img
                         src={images.factory}
-                        alt="X-Zone skate athletic style"
+                        alt="X-Zone youth athleisure streetwear – athletic kidswear by Muthu International"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     </div>
@@ -381,7 +330,7 @@ export function HomePage() {
                     <div className="sm:col-span-5 aspect-[4/3] bg-[#F7F3EB] overflow-hidden border border-[#D8D2C5]">
                       <img
                         src={images.detail}
-                        alt="H&D Club occasion elegance"
+                        alt="H&D Club boutique occasion kidswear – artisanal tailoring by Muthu International"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     </div>
@@ -468,14 +417,6 @@ export function HomePage() {
                     <span>EXPLORE BOY MUNNA RANGE</span>
                     <ArrowRight className="size-4" />
                   </Link>
-                  <button
-                    type="button"
-                    onClick={handleAddMunnaSet}
-                    className="px-5 py-3 border border-white/40 text-white font-bold text-xs uppercase tracking-wider hover:bg-white hover:text-[#18466b] transition-colors flex items-center gap-2"
-                  >
-                    <ClipboardList className="size-4 text-[#EF8557]" />
-                    <span>Reserve Adventure Pack (₹449)</span>
-                  </button>
                 </div>
               </div>
 
@@ -484,7 +425,7 @@ export function HomePage() {
                 <div className="aspect-[4/3] bg-white overflow-hidden border-2 border-white shadow-xl">
                   <img
                     src={images.hero}
-                    alt="Boy Munna kidswear collection"
+                    alt="Boy Munna original character kidswear collection – registered trademark by Muthu International"
                     className="w-full h-full object-cover"
                   />
                 </div>
@@ -527,7 +468,7 @@ export function HomePage() {
             </h2>
             <p className="text-xs sm:text-sm text-[#717880] mt-2">
               Mix & match our factory-direct tops, bottoms, and seasonal colorways. View instant
-              transparent MRP and reserve directly from Tirupur warehouse inventory.
+              transparent MRP and enquire directly with our Tirupur factory desk.
             </p>
           </div>
 
@@ -623,14 +564,13 @@ export function HomePage() {
                       ₹{lookbookTotal}
                     </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleAddLookbookSet}
+                  <Link
+                    to="/request-quote"
                     className="px-6 py-3 bg-[#EF8557] hover:bg-[#d97346] text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center gap-2"
                   >
                     <ClipboardList className="size-4" />
-                    <span>{lookbookAdded ? "Added to Booking List ✓" : "Reserve Coordinate"}</span>
-                  </button>
+                    <span>Request Set Quote</span>
+                  </Link>
                 </div>
               </div>
 

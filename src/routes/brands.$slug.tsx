@@ -15,7 +15,49 @@ import {
 import { useState } from "react";
 import { ProductCard, QuickViewModal, Reveal } from "@/components/site";
 import { brandsList, getBrandById, products, images, CartStore, type Product } from "@/lib/content";
+import { buildSeoHead, buildBrandJsonLd, buildBrandProductListJsonLd } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
+
+/* ── Brand-specific SEO metadata ─────────────────────────────── */
+const brandSeo: Record<string, {
+  title: string;
+  description: string;
+  ogTitle: string;
+  keywords: string;
+}> = {
+  "kids-korner": {
+    title: "Kids Korner – Everyday Cotton Kidswear | Muthu International Tirupur",
+    description:
+      "Shop Kids Korner, the flagship kidswear brand by Muthu International. Bio-washed combed cotton T-shirts, co-ord sets, night suits & shorts for boys and girls ages 2–14. Factory-direct from Tirupur.",
+    ogTitle: "Kids Korner – Comfortable Everyday Kidswear by Muthu International",
+    keywords:
+      "Kids Korner, kids korner kidswear, kids korner t-shirts, kids korner cotton clothing, kids korner Tirupur, kids korner Muthu International, boys t-shirts, girls t-shirts, children everyday wear, combed cotton kids clothing, bio-wash kidswear India",
+  },
+  "x-zone": {
+    title: "X-Zone – Youth Athleisure & Streetwear Kidswear | Muthu International Tirupur",
+    description:
+      "Discover X-Zone athleisure kidswear by Muthu International. French terry joggers, sport polos, graphic hoodies & streetwear co-ords for active kids ages 6–16. Designed and manufactured in Tirupur.",
+    ogTitle: "X-Zone – Athletic Streetwear for Active Kids by Muthu International",
+    keywords:
+      "X-Zone, X-Zone kidswear, X-Zone athleisure, X-Zone joggers, X-Zone streetwear, kids athletic wear, children sportswear, French terry kidswear, youth streetwear India, X-Zone Muthu International, Tirupur kids activewear",
+  },
+  "hd-club": {
+    title: "H&D Club – Boutique Occasion Kidswear & Coordinates | Muthu International Tirupur",
+    description:
+      "Explore H&D Club boutique kidswear by Muthu International. Artisanal corduroy sets, botanical dresses, Cuban-collar resort sets & embroidered occasion wear for children ages 4–14, made in Tirupur.",
+    ogTitle: "H&D Club – Refined Boutique Kidswear by Muthu International",
+    keywords:
+      "H&D Club, H&D Club kidswear, H and D Club, boutique kids clothing, corduroy kids sets, kids occasion wear, embroidered children clothing, Cuban collar kids, botanical dresses kids, H&D Club Muthu International, Tirupur boutique kidswear",
+  },
+  "boy-munna": {
+    title: "Boy Munna – Original Character-Led Kids Clothing | Muthu International Tirupur",
+    description:
+      "Meet Boy Munna, the registered character kidswear brand by Muthu International. Original illustrated graphic tees, explorer co-ords, comic pajama sets & adventure shorts for children. Made in Tirupur.",
+    ogTitle: "Boy Munna – Character Illustrated Kidswear by Muthu International",
+    keywords:
+      "Boy Munna, Boy Munna kidswear, Munna character clothing, kids graphic tees, character kids clothing, illustrated children wear, comic kids pajamas, explorer kids sets, Boy Munna Muthu International, Tirupur character kidswear",
+  },
+};
 
 export const Route = createFileRoute("/brands/$slug")({
   loader: ({ params }) => {
@@ -23,21 +65,44 @@ export const Route = createFileRoute("/brands/$slug")({
     if (!brand) throw notFound();
     return brand;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.name} Kidswear | Official Brand Store`
-          : "Brand Not Found | Kids Korner Platform",
-      },
-      {
-        name: "description",
-        content: loaderData?.description ?? "Explore specialized kidswear collection.",
-      },
-      { property: "og:title", content: loaderData?.name ?? "Brand Store" },
-      { property: "og:type", content: "website" },
-    ],
-  }),
+  head: ({ loaderData, params }) => {
+    const slug = loaderData?.slug ?? params.slug;
+    const seo = brandSeo[slug];
+    const brandProducts = loaderData
+      ? products.filter((p) => p.brandId === loaderData.id)
+      : [];
+
+    return buildSeoHead({
+      title: seo?.title ??
+        (loaderData
+          ? `${loaderData.name} Kidswear | Muthu International Private Limited`
+          : "Brand Not Found | Muthu International Private Limited"),
+      description: seo?.description ??
+        loaderData?.description ??
+        "Explore specialized kidswear collections manufactured by Muthu International Private Limited.",
+      path: `/brands/${slug}`,
+      ogTitle: seo?.ogTitle ??
+        (loaderData
+          ? `${loaderData.name} | Muthu International Private Limited`
+          : "Muthu International Brand"),
+      ...(loaderData?.bannerImage ? { ogImage: loaderData.bannerImage } : {}),
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Our Brands", path: "/brands" },
+        ...(loaderData
+          ? [{ name: loaderData.name, path: `/brands/${loaderData.slug}` }]
+          : []),
+      ],
+      extraJsonLd: loaderData
+        ? [
+            buildBrandJsonLd(loaderData),
+            ...(brandProducts.length > 0
+              ? [buildBrandProductListJsonLd(loaderData, brandProducts)]
+              : []),
+          ]
+        : [],
+    });
+  },
   component: BrandLandingPage,
 });
 
@@ -188,6 +253,11 @@ function BrandLandingPage() {
                   {brand.description}
                 </p>
 
+                {/* Brand story for SEO content depth */}
+                <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#252525]/70">
+                  {brand.story}
+                </p>
+
                 {/* Badges */}
                 <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-bold">
                   <span className="border border-[#226192] bg-[#226192] px-3 py-1 text-[#FFFFFF]">
@@ -208,7 +278,7 @@ function BrandLandingPage() {
               <div className="relative border border-[#226192] bg-[#FFFFFF] p-2 shadow-xl">
                 <img
                   src={brand.bannerImage}
-                  alt={brand.name}
+                  alt={`${brand.name} kidswear collection by Muthu International – ${brand.positioning}`}
                   className="aspect-[4/3] size-full object-cover"
                 />
                 <div className="absolute bottom-4 left-4 border border-[#FFFFFF]/30 bg-[#226192]/90 px-3 py-1 text-[10px] font-bold text-[#FFFFFF] uppercase tracking-wider backdrop-blur-sm">
@@ -263,7 +333,7 @@ function BrandLandingPage() {
               <div className="lg:col-span-7 aspect-[16/10] overflow-hidden bg-white shadow-md">
                 <img
                   src={kidsKornerLook === "botanical" ? images.detail : images.printedSet}
-                  alt="Kids Korner Coordinator Set"
+                  alt={`Kids Korner ${kidsKornerLook === "botanical" ? "Botanical Summer Co-ord Set" : "Sunset Ribbed Daywear Set"} – combed cotton kidswear`}
                   className="w-full h-full object-cover transition-all duration-500"
                 />
               </div>
@@ -349,7 +419,7 @@ function BrandLandingPage() {
               <div className="aspect-[4/3] bg-white overflow-hidden shadow-md">
                 <img
                   src={images.hero}
-                  alt="Munna Character Persona"
+                  alt={`Boy Munna ${munnaCostume === "safari" ? "Jungle Safari" : munnaCostume === "space" ? "Rocket Launch" : "Dino Roar"} character kidswear outfit`}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -508,6 +578,58 @@ function BrandLandingPage() {
           onClose={() => setQuickViewProduct(null)}
         />
       )}
+
+      {/* ═══ 6. EXPLORE OTHER BRANDS & PARENT COMPANY LINKS ═══ */}
+      <section className="border-t border-[#D8D2C5] bg-[#FFFFFF] py-16 sm:py-20">
+        <div className="page-shell">
+          <div className="text-center mb-10">
+            <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#EF8557]">
+              Part of the Muthu International Brand Family
+            </span>
+            <h2 className="mt-2 font-serif text-2xl font-extrabold uppercase text-[#226192] sm:text-3xl">
+              Explore Our Other Brands
+            </h2>
+            <p className="mt-2 mx-auto max-w-xl text-sm text-[#252525]/75">
+              All four brands are designed, manufactured, and dispatched from Muthu International's integrated facilities in Tirupur, Tamil Nadu.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {brandsList
+              .filter((b) => b.id !== brand.id)
+              .map((otherBrand) => (
+                <Link
+                  key={otherBrand.id}
+                  to="/brands/$slug"
+                  params={{ slug: otherBrand.slug }}
+                  className="group border border-[#D8D2C5] bg-[#F7F3EB] p-5 hover:border-[#226192] transition-colors"
+                >
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-[#EF8557]">
+                    {otherBrand.badge}
+                  </span>
+                  <h3 className="font-serif text-lg font-bold text-[#226192] mt-1 group-hover:text-[#EF8557] transition-colors">
+                    {otherBrand.name}
+                  </h3>
+                  <p className="text-xs text-[#252525]/70 mt-1 leading-relaxed line-clamp-2">
+                    {otherBrand.positioning}
+                  </p>
+                  <span className="inline-flex items-center gap-1 mt-3 text-xs font-bold uppercase tracking-wider text-[#226192] group-hover:text-[#EF8557] transition-colors">
+                    View Collection <ArrowRight className="size-3.5" />
+                  </span>
+                </Link>
+              ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-[#226192] hover:text-[#EF8557] transition-colors"
+            >
+              <ArrowLeft className="size-4" /> Back to Muthu International Homepage
+            </Link>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

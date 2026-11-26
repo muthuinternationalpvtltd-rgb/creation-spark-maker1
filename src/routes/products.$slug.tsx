@@ -36,6 +36,7 @@ import {
   type ProductVariant,
   type ProductReview,
 } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -43,21 +44,25 @@ export const Route = createFileRoute("/products/$slug")({
     if (!product) throw notFound();
     return product;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.name} | ${loaderData.brandName} Official Store`
-          : "Product Not Found | Kids Korner Platform",
-      },
-      {
-        name: "description",
-        content: loaderData?.description ?? "Explore certified kidswear garments.",
-      },
-      { property: "og:title", content: loaderData?.name ?? "Kids Korner Product" },
-      { property: "og:type", content: "product" },
-    ],
-  }),
+  head: ({ loaderData, params }) =>
+    buildSeoHead({
+      title: loaderData
+        ? `${loaderData.name} | ${loaderData.brandName} | Muthu International Private Limited`
+        : "Product Not Found | Muthu International Private Limited",
+      description:
+        loaderData?.description ??
+        "Explore kidswear garments manufactured by Muthu International Private Limited.",
+      path: `/products/${loaderData?.slug ?? params.slug}`,
+      ogTitle: loaderData?.name ?? "Muthu International Product",
+      ogType: "product",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Products", path: "/products" },
+        ...(loaderData
+          ? [{ name: loaderData.name, path: `/products/${loaderData.slug}` }]
+          : []),
+      ],
+    }),
   component: ProductDetailPage,
 });
 
@@ -433,11 +438,11 @@ function ProductDetailPage() {
                   {liveStock > 5 ? (
                     <span className="text-emerald-700 flex items-center gap-1.5">
                       <Check className="size-4" /> Available in Company Stock ({liveStock} garments
-                      ready to reserve)
+                      ready for dispatch)
                     </span>
                   ) : liveStock > 0 ? (
                     <span className="text-amber-600 font-bold flex items-center gap-1.5">
-                      ⚠ Only {liveStock} left in stock — reserve soon!
+                      ⚠ Only {liveStock} left in stock — enquire soon!
                     </span>
                   ) : (
                     <span className="text-rose-600 font-bold">

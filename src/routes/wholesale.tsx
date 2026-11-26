@@ -17,20 +17,21 @@ import { Textarea } from "@/components/ui/textarea";
 import { SectionHeading, Reveal } from "@/components/site";
 import { WholesaleStore, brandsList } from "@/lib/content";
 import { submitWholesaleEmailFn } from "@/lib/booking-server";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/wholesale")({
-  head: () => ({
-    meta: [
-      { title: "B2B & Wholesale Kidswear Inquiries | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Partner with Muthu International for bulk kidswear supply, regional distribution, and retail sourcing across Kids Korner, X-Zone, H&D Club, and Boy Munna.",
-      },
-      { property: "og:title", content: "Wholesale Kidswear Sourcing | Muthu International" },
-      { property: "og:type", content: "website" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "B2B & Wholesale Kidswear Inquiries | Muthu International Private Limited",
+      description:
+        "Partner with Muthu International Private Limited for bulk kidswear supply, regional distribution, and retail sourcing across Kids Korner, X-Zone, H&D Club, and Boy Munna.",
+      path: "/wholesale",
+      ogTitle: "Wholesale Kidswear Sourcing | Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Wholesale & B2B", path: "/wholesale" },
+      ],
+    }),
   component: WholesalePage,
 });
 

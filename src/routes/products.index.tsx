@@ -2,6 +2,7 @@ import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { ProductCard, SectionHeading, Reveal, CTASection, QuickViewModal } from "@/components/site";
 import { products, brandsList, type Product } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 import { Button } from "@/components/ui/button";
 import {
   Sparkles,
@@ -42,18 +43,18 @@ export const Route = createFileRoute("/products/")({
     }
     return out;
   },
-  head: () => ({
-    meta: [
-      { title: "Kidswear Catalogue & Online Shop | Kids Korner Multi-Brand" },
-      {
-        name: "description",
-        content:
-          "Browse our complete children's garment catalogue across Kids Korner, X-Zone, H&D Club, and Boy Munna. Soft combed cotton, child-safe bio dyes, manufactured in Tirupur, India.",
-      },
-      { property: "og:title", content: "Kids Korner Kidswear Catalogue" },
-      { property: "og:type", content: "website" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Kidswear Product Catalogue | Muthu International Private Limited",
+      description:
+        "Browse Muthu International Private Limited's complete children's garment catalogue across Kids Korner, X-Zone, H&D Club, and Boy Munna.",
+      path: "/products",
+      ogTitle: "Kidswear Product Catalogue | Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Products", path: "/products" },
+      ],
+    }),
   component: ProductsPage,
 });
 

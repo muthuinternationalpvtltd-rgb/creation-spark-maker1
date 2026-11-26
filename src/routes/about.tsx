@@ -4,26 +4,23 @@ import { ArrowRight, Check, Users, Factory, Palette, Package, Award, MapPin } fr
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/about")({
-  head: () => ({
-    meta: [
-      { title: "About Muthu International | Kidswear Manufacturing Atelier" },
-      {
-        name: "description",
-        content:
-          "Learn about Muthu International Private Limited: a kidswear manufacturer established in 2000, with two factories, an in-house design team, a dedicated warehouse and 100+ employees.",
-      },
-      { property: "og:title", content: "About Muthu International Private Ltd" },
-      {
-        property: "og:description",
-        content:
-          "Over 25 years of garment manufacturing experience, serving kidswear customers across India.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "About Muthu International Private Limited | Kidswear Manufacturer",
+      description:
+        "Learn about Muthu International Private Limited: a Tirupur kidswear manufacturer established in 2000 with two factories, an in-house design team, a dedicated warehouse, and 100+ employees.",
+      path: "/about",
+      ogTitle: "About Muthu International Private Limited",
+      ogDescription:
+        "Over 25 years of garment manufacturing experience serving kidswear customers across India.",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "About", path: "/about" },
+      ],
+    }),
   component: AboutPage,
 });
 

@@ -14,26 +14,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/oem-private-label")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear Manufacturing Expertise | OEM & Private Label | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Discover Muthu International's private label and OEM kidswear manufacturing expertise. Custom branding, bespoke trims, rapid sampling, and export-grade production in Tirupur, India.",
-      },
-      { property: "og:title", content: "Kidswear Manufacturing Expertise | Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "Turnkey private label apparel solutions for retailers and children's brands worldwide.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "OEM & Private Label Kidswear Expertise | Muthu International Private Limited",
+      description:
+        "Discover Muthu International Private Limited's private label and OEM kidswear manufacturing expertise: custom branding, trims, sampling, and production in Tirupur, India.",
+      path: "/oem-private-label",
+      ogTitle: "OEM & Private Label Kidswear Expertise | Muthu International",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Our Expertise", path: "/oem-private-label" },
+      ],
+    }),
   component: OemPrivateLabelPage,
 });
 

@@ -31,18 +31,17 @@ import {
   type Order,
 } from "@/lib/content";
 import { submitBookingEmailFn } from "@/lib/booking-server";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/checkout")({
-  head: () => ({
-    meta: [
-      { title: "Confirm Stock Booking | Kids Korner Promotional Store" },
-      {
-        name: "description",
-        content:
-          "Finalize your stock reservation with full MRP and GST tax breakdown. No payment gateway or login required.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Confirm Booking | Muthu International Private Limited",
+      description:
+        "Finalize your kidswear booking with MRP and GST tax breakdown.",
+      path: "/checkout",
+      noindex: true,
+    }),
   component: CheckoutPage,
 });
 

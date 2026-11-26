@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, Check, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CTASection, ProductCard, Reveal, ScrollMedia, SectionHeading } from "@/components/site";
 import { collections, products } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/collections/$slug")({
   loader: ({ params }) => {
@@ -10,28 +11,27 @@ export const Route = createFileRoute("/collections/$slug")({
     if (!collection) throw notFound();
     return collection;
   },
-  head: ({ loaderData }) => ({
-    meta: [
-      {
-        title: loaderData
-          ? `${loaderData.name} Collection | Muthu International Atelier`
-          : "Collection Not Found | Muthu International",
-      },
-      {
-        name: "description",
-        content:
-          loaderData?.description ??
-          "Explore seasonal kidswear collections by Muthu International.",
-      },
-      { property: "og:title", content: loaderData?.name ?? "Muthu International Collection" },
-      {
-        property: "og:description",
-        content: loaderData?.highlight ?? "Kidswear collection development.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: ({ loaderData, params }) =>
+    buildSeoHead({
+      title: loaderData
+        ? `${loaderData.name} Collection | Muthu International Private Limited`
+        : "Collection Not Found | Muthu International Private Limited",
+      description:
+        loaderData?.description ??
+        "Explore seasonal kidswear collections manufactured by Muthu International Private Limited.",
+      path: `/collections/${loaderData?.slug ?? params.slug}`,
+      ogTitle: loaderData
+        ? `${loaderData.name} | Muthu International Private Limited`
+        : "Muthu International Collection",
+      ogDescription: loaderData?.highlight ?? "Kidswear collection development.",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Collection", path: "/collections" },
+        ...(loaderData
+          ? [{ name: loaderData.name, path: `/collections/${loaderData.slug}` }]
+          : []),
+      ],
+    }),
   component: CollectionDetailPage,
 });
 

@@ -3,26 +3,21 @@ import { ArrowRight, Sparkles, Filter, Eye, Layers } from "lucide-react";
 import { CollectionCard, CTASection, Reveal, SectionHeading } from "@/components/site";
 import { collections, images } from "@/lib/content";
 import { Button } from "@/components/ui/button";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/collections/")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear Collections Lookbook | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Explore Muthu International's curated kidswear collections: Bloom & Sprout Organic, Sunburst Playground, and Woodland Slumber. In-house daily design innovations.",
-      },
-      { property: "og:title", content: "Curated Kidswear Collections | Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "High-fashion lookbook showcasing contemporary children's apparel, coord sets, and nightwear.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Kidswear Collections | Muthu International Private Limited",
+      description:
+        "Explore Muthu International Private Limited's curated seasonal kidswear collections across Spring/Summer, Autumn/Winter, and New Developments.",
+      path: "/collections",
+      ogTitle: "Kidswear Collections | Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Collection", path: "/collections" },
+      ],
+    }),
   component: CollectionsPage,
 });
 

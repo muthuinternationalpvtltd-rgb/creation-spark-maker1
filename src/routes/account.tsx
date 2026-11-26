@@ -22,6 +22,8 @@ import {
 } from "@/lib/content";
 import { fetchCentralSheetDataFn } from "@/lib/booking-server";
 
+import { buildSeoHead } from "@/lib/seo";
+
 export const Route = createFileRoute("/account")({
   validateSearch: (
     search: Record<string, unknown>,
@@ -38,16 +40,14 @@ export const Route = createFileRoute("/account")({
     }
     return out;
   },
-  head: () => ({
-    meta: [
-      { title: "My Stock Bookings & Wishlist | Kids Korner" },
-      {
-        name: "description",
-        content:
-          "Look up your stock reservations by customer email or booking ID without logging in, print booking slips, and manage saved wishlist items.",
-      },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "My Bookings & Wishlist | Muthu International Private Limited",
+      description:
+        "Look up your bookings by email or reference ID and manage saved wishlist items.",
+      path: "/account",
+      noindex: true,
+    }),
   component: BookingsPortalPage,
 });
 

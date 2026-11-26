@@ -14,26 +14,21 @@ import {
 import { useState } from "react";
 import { InquiryForm, Reveal } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/request-quote")({
-  head: () => ({
-    meta: [
-      { title: "Request Kidswear Manufacturing Quote | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Submit your kidswear manufacturing enquiry to Muthu International. Fast 24-hour response on tech packs, private label collections, and volume wholesale production.",
-      },
-      { property: "og:title", content: "B2B Kidswear RFQ & Quotation | Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "Transparent costing, rapid sampling, and export-grade production from Tirupur, India.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Request Kidswear Manufacturing Quote | Muthu International Private Limited",
+      description:
+        "Submit your kidswear manufacturing enquiry to Muthu International Private Limited. Fast response on tech packs, private label collections, and volume wholesale production.",
+      path: "/request-quote",
+      ogTitle: "Request Kidswear Manufacturing Quote | Muthu International",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Request Quote", path: "/request-quote" },
+      ],
+    }),
   component: RequestQuotePage,
 });
 

@@ -11,30 +11,25 @@ import {
   COMPANY_SECONDARY_EMAIL,
   COMPANY_SECONDARY_MOBILE,
 } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/ftatMFEkx6qjgJp29?g_st=aw";
 const GOOGLE_MAPS_EMBED_URL =
   "https://maps.google.com/maps?q=Muthu%20International%20Private%20Limited%2C%2014%2F2%20Asher%20Nagar%2C%20North%201st%20Street%2C%20Avinashi%20Road%2C%20Tirupur%20641603&t=&z=16&ie=UTF8&iwloc=&output=embed";
 
 export const Route = createFileRoute("/contact")({
-  head: () => ({
-    meta: [
-      { title: "Contact Muthu International | Kidswear Manufacturer" },
-      {
-        name: "description",
-        content:
-          "Contact Muthu International Private Limited to discuss kidswear products, manufacturing capabilities and domestic business opportunities across India.",
-      },
-      { property: "og:title", content: "Let's Talk | Muthu International Private Ltd" },
-      {
-        property: "og:description",
-        content:
-          "Our team welcomes product enquiries and opportunities for long-term business relationships.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Contact Muthu International Private Limited | Tirupur Kidswear Manufacturer",
+      description:
+        "Contact Muthu International Private Limited in Tirupur, Tamil Nadu to discuss kidswear products, wholesale supply, private label manufacturing, and factory visits.",
+      path: "/contact",
+      ogTitle: "Contact Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Contact", path: "/contact" },
+      ],
+    }),
   component: ContactPage,
 });
 

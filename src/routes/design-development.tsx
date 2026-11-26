@@ -16,26 +16,21 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/design-development")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear Design & Development Atelier | Muthu International" },
-      {
-        name: "description",
-        content:
-          "Experience Muthu International's creative atelier: where daily kidswear sketches transform into production-ready collections through CAD design, Pantone matching, and precision sampling.",
-      },
-      { property: "og:title", content: "From Idea to Production | Muthu International Atelier" },
-      {
-        property: "og:description",
-        content:
-          "Fresh kidswear designs developed daily. In-house trend forecasting, textile innovation, and rapid prototyping.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Kidswear Design & Development | Muthu International Private Limited",
+      description:
+        "Explore Muthu International Private Limited's in-house kidswear design team: daily style development, CAD patterning, colour matching, and precision sampling.",
+      path: "/design-development",
+      ogTitle: "Kidswear Design & Development | Muthu International",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Design & Development", path: "/design-development" },
+      ],
+    }),
   component: DesignDevelopmentPage,
 });
 

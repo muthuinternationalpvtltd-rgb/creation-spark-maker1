@@ -13,26 +13,21 @@ import {
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
+import { buildSeoHead } from "@/lib/seo";
 
 export const Route = createFileRoute("/quality")({
-  head: () => ({
-    meta: [
-      { title: "Kidswear Quality Control & Testing | Muthu International Atelier" },
-      {
-        name: "description",
-        content:
-          "Learn about Muthu International's commitment to consistent kidswear quality, customer requirements and applicable statutory and industry standards.",
-      },
-      { property: "og:title", content: "Quality at Every Stage | Muthu International" },
-      {
-        property: "og:description",
-        content:
-          "Quality is an important part of our manufacturing approach and customer relationships.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  head: () =>
+    buildSeoHead({
+      title: "Kidswear Quality Control & Compliance | Muthu International Private Limited",
+      description:
+        "Learn about Muthu International Private Limited's commitment to consistent kidswear quality, child-safe standards, and statutory compliance in Tirupur.",
+      path: "/quality",
+      ogTitle: "Quality in Every Garment | Muthu International Private Limited",
+      breadcrumbs: [
+        { name: "Home", path: "/" },
+        { name: "Quality", path: "/quality" },
+      ],
+    }),
   component: QualityPage,
 });
 
