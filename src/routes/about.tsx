@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Check, Users, Factory, Palette, Package, Award, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
@@ -27,6 +28,52 @@ export const Route = createFileRoute("/about")({
 });
 
 function AboutPage() {
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const [timelineProgress, setTimelineProgress] = useState(0);
+  const [visibleMilestones, setVisibleMilestones] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setTimelineProgress(1);
+      return;
+    }
+
+    let rafId = 0;
+    const updateProgress = () => {
+      const container = timelineRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const viewportMid = window.innerHeight * 0.65;
+      const raw = (viewportMid - rect.top) / Math.max(1, rect.height);
+      const clamped = Math.max(0, Math.min(1, raw));
+      setTimelineProgress(clamped);
+
+      const items = container.querySelectorAll<HTMLElement>("[data-milestone-idx]");
+      const nextVisible: Record<number, boolean> = {};
+      items.forEach((el) => {
+        const idx = Number(el.dataset["milestoneIdx"]);
+        const itemRect = el.getBoundingClientRect();
+        nextVisible[idx] = itemRect.top < window.innerHeight * 0.85 && itemRect.bottom > 40;
+      });
+      setVisibleMilestones(nextVisible);
+    };
+
+    const onScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(updateProgress);
+    };
+
+    updateProgress();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
+
   const milestones = [
     {
       year: "2000",
@@ -302,24 +349,47 @@ function AboutPage() {
             text="Key milestones in Muthu International's growth as an established kidswear manufacturer."
           />
 
-          <div className="relative mt-16">
-            {/* Vertical line */}
-            <div className="absolute left-4 top-0 bottom-0 w-px bg-gradient-to-b from-[#EF8557] via-[#226192]/30 to-transparent lg:left-1/2" />
+          <div ref={timelineRef} className="relative mt-16">
+            {/* Background track line */}
+            <div className="absolute left-4 top-0 bottom-0 w-px bg-[#226192]/20 lg:left-1/2" />
+            {/* Animated scroll-progress fill line */}
+            <div
+              className="absolute left-4 top-0 w-[2px] -translate-x-[0.5px] bg-gradient-to-b from-[#EF8557] via-[#EF8557] to-[#226192] transition-[height] duration-150 ease-out lg:left-1/2"
+              style={{ height: `${Math.round(timelineProgress * 100)}%` }}
+            />
 
             <div className="space-y-12">
-              {milestones.map((m, idx) => (
-                <Reveal key={m.year}>
+              {milestones.map((m, idx) => {
+                const isActive = visibleMilestones[idx] ?? false;
+                const isLeft = idx % 2 === 0;
+                return (
                   <div
-                    className={`relative flex items-start gap-8 ${idx % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"}`}
+                    key={m.year}
+                    data-milestone-idx={idx}
+                    className={`relative flex items-start gap-8 ${isLeft ? "lg:flex-row" : "lg:flex-row-reverse"}`}
                   >
-                    {/* Dot */}
-                    <div className="absolute left-4 top-1 z-10 flex size-3 -translate-x-1/2 items-center justify-center lg:left-1/2">
-                      <span className="size-3 rounded-full border-2 border-[#EF8557] bg-[#EAE6DE]" />
+                    {/* Animated milestone dot */}
+                    <div className="absolute left-4 top-2 z-10 flex size-4 -translate-x-1/2 items-center justify-center lg:left-1/2">
+                      <span
+                        className={`size-3.5 rounded-full border-2 transition-all duration-500 ${
+                          isActive
+                            ? "scale-110 border-[#EF8557] bg-[#EF8557] shadow-[0_0_0_5px_rgba(239,133,87,0.2)]"
+                            : "scale-90 border-[#226192]/40 bg-[#EAE6DE]"
+                        }`}
+                      />
                     </div>
 
-                    {/* Content card */}
+                    {/* Animated content card */}
                     <div
-                      className={`ml-10 w-full border border-[#226192]/15 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-md lg:ml-0 lg:w-[calc(50%-2rem)] ${idx % 2 === 0 ? "lg:mr-auto lg:pr-10" : "lg:ml-auto lg:pl-10"}`}
+                      className={`ml-10 w-full border bg-white p-6 shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-lg lg:ml-0 lg:w-[calc(50%-2.25rem)] ${
+                        isLeft ? "lg:mr-auto lg:pr-10" : "lg:ml-auto lg:pl-10"
+                      } ${
+                        isActive
+                          ? "opacity-100 translate-x-0 translate-y-0 border-[#226192]/25"
+                          : `opacity-0 translate-y-6 border-[#226192]/10 ${
+                              isLeft ? "lg:-translate-x-8" : "lg:translate-x-8"
+                            }`
+                      }`}
                     >
                       <span className="font-['Space_Grotesk'] text-2xl font-extrabold text-[#EF8557]">
                         {m.year}
@@ -330,8 +400,8 @@ function AboutPage() {
                       <p className="mt-2 text-sm leading-relaxed text-[#252525]/75">{m.desc}</p>
                     </div>
                   </div>
-                </Reveal>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

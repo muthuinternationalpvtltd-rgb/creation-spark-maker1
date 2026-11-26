@@ -312,8 +312,8 @@ function WholesalePage() {
                           required
                           value={companyName}
                           onChange={(e) => setCompanyName(e.target.value)}
-                          placeholder="e.g. Metro Kids Retail Pvt Ltd"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs"
+                          placeholder="Enter company or business name"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -325,8 +325,8 @@ function WholesalePage() {
                           required
                           value={contactPerson}
                           onChange={(e) => setContactPerson(e.target.value)}
-                          placeholder="e.g. Suresh Menon"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs"
+                          placeholder="Enter contact person's full name"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -339,8 +339,8 @@ function WholesalePage() {
                           type="tel"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
-                          placeholder="+91 94470 11223"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs font-mono"
+                          placeholder="+91 XXXXX XXXXX"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm font-mono text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -353,8 +353,8 @@ function WholesalePage() {
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="suresh@metrokids.in"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs"
+                          placeholder="name@company.com"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -366,8 +366,8 @@ function WholesalePage() {
                           required
                           value={city}
                           onChange={(e) => setCity(e.target.value)}
-                          placeholder="e.g. Kochi"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs"
+                          placeholder="Enter city"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -379,8 +379,8 @@ function WholesalePage() {
                           required
                           value={state}
                           onChange={(e) => setState(e.target.value)}
-                          placeholder="e.g. Kerala"
-                          className="h-10 rounded-none border-[#226192]/30 text-xs"
+                          placeholder="Enter state"
+                          className="h-11 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
                         />
                       </div>
 
@@ -391,7 +391,7 @@ function WholesalePage() {
                         <select
                           value={estimatedQuantity}
                           onChange={(e) => setEstimatedQuantity(e.target.value)}
-                          className="w-full h-10 border border-[#226192]/30 bg-[#FFFFFF] px-3 text-xs font-semibold text-[#226192]"
+                          className="w-full h-11 rounded-none border border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm font-medium text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192] focus:outline-none cursor-pointer"
                         >
                           <option value="100 – 500 pcs">100 – 500 pcs (Boutique Tier)</option>
                           <option value="500 – 2,500 pcs">500 – 2,500 pcs (Regional MBO)</option>
@@ -409,7 +409,7 @@ function WholesalePage() {
                         <select
                           value={interestedBrand}
                           onChange={(e) => setInterestedBrand(e.target.value)}
-                          className="w-full h-10 border border-[#226192]/30 bg-[#FFFFFF] px-3 text-xs font-semibold text-[#226192]"
+                          className="w-full h-11 rounded-none border border-[#226192]/25 bg-[#FFFFFF] px-3.5 text-sm font-medium text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192] focus:outline-none cursor-pointer"
                         >
                           <option value="Kids Korner (Flagship)">
                             Kids Korner (Everyday Flagship)

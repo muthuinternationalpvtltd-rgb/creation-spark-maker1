@@ -212,11 +212,10 @@ function ProductsPage() {
                   key={b.id}
                   type="button"
                   onClick={() => setSelectedBrand(b.id)}
-                  className={`px-4 py-2 text-xs font-bold uppercase transition-all border ${
-                    selectedBrand === b.id
-                      ? "border-[#226192] bg-[#226192] text-white shadow-sm"
-                      : "border-[#D8D2C5] bg-white text-[#252525] hover:border-[#226192]"
-                  }`}
+                  className={`px-4 py-2 text-xs font-bold uppercase transition-all border ${selectedBrand === b.id
+                    ? "border-[#226192] bg-[#226192] text-white shadow-sm"
+                    : "border-[#D8D2C5] bg-white text-[#252525] hover:border-[#226192]"
+                    }`}
                 >
                   {b.name}
                 </button>
@@ -239,7 +238,7 @@ function ProductsPage() {
                 placeholder="Search styles, brands, or keywords..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-transparent text-xs text-[#252525] placeholder-[#252525]/50 outline-none"
+                className="w-full bg-transparent text-xs text-[#252525] placeholder:text-[#252525]/55 outline-none"
               />
               {searchQuery && (
                 <button type="button" onClick={() => setSearchQuery("")}>
@@ -281,9 +280,8 @@ function ProductsPage() {
           <div className="grid gap-10 md:grid-cols-[260px_1fr] items-start">
             {/* ═══ LEFT SIDEBAR FILTERS ═══ */}
             <aside
-              className={`space-y-6 md:block ${
-                mobileFilterOpen ? "fixed inset-0 z-50 overflow-y-auto bg-[#EAE6DE] p-6" : "hidden"
-              }`}
+              className={`space-y-6 md:block ${mobileFilterOpen ? "fixed inset-0 z-50 overflow-y-auto bg-[#EAE6DE] p-6" : "hidden"
+                }`}
             >
               {mobileFilterOpen && (
                 <div className="flex items-center justify-between border-b border-[#226192]/20 pb-4 mb-4 md:hidden">
@@ -402,11 +400,10 @@ function ProductsPage() {
                   <button
                     type="button"
                     onClick={() => setSelectedSize("All")}
-                    className={`px-2.5 py-1 text-[11px] font-bold border ${
-                      selectedSize === "All"
-                        ? "bg-[#226192] text-[#FFFFFF] border-[#226192]"
-                        : "border-[#226192]/20 bg-[#EAE6DE]/50 text-[#226192]"
-                    }`}
+                    className={`px-2.5 py-1 text-[11px] font-bold border ${selectedSize === "All"
+                      ? "bg-[#226192] text-[#FFFFFF] border-[#226192]"
+                      : "border-[#226192]/20 bg-[#EAE6DE]/50 text-[#226192]"
+                      }`}
                   >
                     All
                   </button>
@@ -415,11 +412,10 @@ function ProductsPage() {
                       key={s}
                       type="button"
                       onClick={() => setSelectedSize(s)}
-                      className={`px-2 py-1 text-[11px] font-semibold border ${
-                        selectedSize === s
-                          ? "bg-[#226192] text-[#FFFFFF] border-[#226192]"
-                          : "border-[#226192]/20 bg-[#FFFFFF] text-[#252525] hover:border-[#EF8557]"
-                      }`}
+                      className={`px-2 py-1 text-[11px] font-semibold border ${selectedSize === s
+                        ? "bg-[#226192] text-[#FFFFFF] border-[#226192]"
+                        : "border-[#226192]/20 bg-[#FFFFFF] text-[#252525] hover:border-[#EF8557]"
+                        }`}
                     >
                       {s}
                     </button>

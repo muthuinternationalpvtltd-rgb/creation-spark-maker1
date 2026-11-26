@@ -74,13 +74,14 @@ export const primaryNav = [
   { label: "Manufacturing", to: "/manufacturing" },
   { label: "Our Expertise", to: "/oem-private-label" },
   { label: "Quality", to: "/quality" },
+  { label: "Contact", to: "/contact" },
 ] as const;
 
 export const secondaryNav = [
   { label: "Browse Full Catalogue", to: "/products" },
   { label: "Kids Korner (Flagship)", to: "/brands/kids-korner" },
   { label: "X-Zone (Athleisure)", to: "/brands/x-zone" },
-  { label: "H&D Club (Boutique)", to: "/brands/hd-club" },
+  { label: "H & D Club (Boutique)", to: "/brands/hd-club" },
   { label: "Boy Munna (Character)", to: "/brands/boy-munna" },
   { label: "Wholesale & B2B", to: "/wholesale" },
   { label: "Design & Development", to: "/design-development" },
@@ -202,7 +203,7 @@ export function SiteHeader() {
             </Link>
 
             <nav
-              className="hidden lg:flex items-center justify-center gap-6 xl:gap-9 mx-auto flex-1"
+              className="hidden lg:flex items-center justify-center gap-5 xl:gap-7 mx-auto flex-1"
               aria-label="Brand and Category Navigation"
             >
               <Link
@@ -361,17 +362,27 @@ export function SiteHeader() {
               >
                 Quality
               </Link>
+
+              <Link
+                to="/contact"
+                className="py-1 text-xs font-semibold uppercase tracking-[0.08em] text-[#252525] hover:text-[#226192] transition-colors relative whitespace-nowrap"
+                activeProps={{
+                  className:
+                    "text-[#226192] font-bold after:absolute after:-bottom-2 after:left-0 after:right-0 after:h-[2.5px] after:bg-[#EF8557]",
+                }}
+              >
+                Contact
+              </Link>
             </nav>
 
-            {/* Right: Owner Admin Portal Link & Mobile Hamburger */}
+            {/* Right: Get Quote CTA & Mobile Hamburger */}
             <div className="flex items-center gap-2 sm:gap-3 shrink-0">
               <Link
-                to="/admin"
-                className="hidden sm:flex items-center gap-1.5 border border-[#226192]/30 bg-[#FFFFFF] px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#226192] hover:bg-[#226192] hover:text-[#FFFFFF] transition-colors"
-                title="Director & Admin Operations Desk"
+                to="/request-quote"
+                className="hidden sm:flex items-center gap-1.5 border border-[#226192] bg-[#226192] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-[#FFFFFF] hover:bg-[#EF8557] hover:border-[#EF8557] transition-colors"
               >
-                <ShieldCheck className="size-3 text-[#EF8557]" />
-                <span>Owner Admin</span>
+                <span>Get Quote</span>
+                <ArrowRight className="size-3" />
               </Link>
 
               {/* Mobile Hamburger Toggle */}
@@ -405,7 +416,7 @@ export function SiteHeader() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search products, brands (e.g. Dinosaur, Boy Munna, Shorts, Polo)..."
-                  className="w-full bg-transparent text-base font-semibold text-[#252525] placeholder-[#252525]/50 outline-none"
+                  className="w-full bg-transparent text-base font-semibold text-[#252525] placeholder:text-[#252525]/55 outline-none"
                 />
               </div>
               <button
@@ -784,7 +795,7 @@ export function SiteFooter() {
                   placeholder="Enter your email address..."
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="rounded-none border-[#FFFFFF]/30 bg-[#FFFFFF]/10 text-xs text-[#FFFFFF] placeholder-[#EAE6DE]/50"
+                  className="h-11 rounded-none border-[#FFFFFF]/35 bg-[#FFFFFF]/12 text-sm text-[#FFFFFF] placeholder:text-[#FFFFFF]/70 focus-visible:border-[#EF8557] focus-visible:ring-[#EF8557]"
                 />
                 <Button
                   type="submit"
@@ -1423,8 +1434,8 @@ function QuickViewModalInner({ product, onClose }: { product: Product; onClose: 
                         type="button"
                         onClick={() => match && setSelectedVariant(match)}
                         className={`border px-2.5 py-1 text-xs font-semibold ${selectedVariant.colour === col
-                            ? "border-[#EF8557] bg-[#FFFFFF] text-[#EF8557] ring-1 ring-[#EF8557]"
-                            : "border-[#226192]/20 bg-[#FFFFFF]/70 text-[#252525] hover:border-[#226192]"
+                          ? "border-[#EF8557] bg-[#FFFFFF] text-[#EF8557] ring-1 ring-[#EF8557]"
+                          : "border-[#226192]/20 bg-[#FFFFFF]/70 text-[#252525] hover:border-[#226192]"
                           }`}
                       >
                         {col}
@@ -1451,8 +1462,8 @@ function QuickViewModalInner({ product, onClose }: { product: Product; onClose: 
                         type="button"
                         onClick={() => match && setSelectedVariant(match)}
                         className={`border px-2.5 py-1 text-xs font-semibold ${selectedVariant.size === s
-                            ? "border-[#226192] bg-[#226192] text-[#FFFFFF]"
-                            : "border-[#226192]/20 bg-[#FFFFFF] text-[#226192] hover:border-[#EF8557]"
+                          ? "border-[#226192] bg-[#226192] text-[#FFFFFF]"
+                          : "border-[#226192]/20 bg-[#FFFFFF] text-[#226192] hover:border-[#EF8557]"
                           }`}
                       >
                         {s}
@@ -1617,6 +1628,8 @@ export function InquiryForm({
   initialProduct?: string;
 }) {
   const [sent, setSent] = useState(false);
+  const [emailSentByServer, setEmailSentByServer] = useState(true);
+  const [dispatchMessage, setDispatchMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [fullName, setFullName] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -1631,7 +1644,7 @@ export function InquiryForm({
     if (!e.currentTarget.checkValidity()) return;
     setSubmitting(true);
     try {
-      await submitInquiryEmailFn({
+      const res = await submitInquiryEmailFn({
         data: {
           kind,
           fullName,
@@ -1643,13 +1656,23 @@ export function InquiryForm({
           message,
         },
       });
+      setEmailSentByServer(res?.emailSentByServer ?? false);
+      setDispatchMessage(res?.message || "");
     } catch (err) {
       console.warn("Inquiry submit error:", err);
+      setEmailSentByServer(false);
+      setDispatchMessage("Automated email server could not be reached.");
     } finally {
       setSubmitting(false);
       setSent(true);
     }
   };
+
+  const fallbackMailtoUrl = `mailto:${COMPANY_OWNER_EMAIL}?subject=${encodeURIComponent(
+    `[${kind === "quote" ? "Quote Request" : "Contact Enquiry"}] ${fullName} - ${brand}`,
+  )}&body=${encodeURIComponent(
+    `Full Name: ${fullName}\nCompany / Brand: ${companyName}\nEmail: ${email}\nPhone: ${phone}\nCity / State: ${cityState}\nBrand: ${brand}\n\nMessage:\n${message}`,
+  )}`;
 
   if (sent) {
     return (
@@ -1657,28 +1680,42 @@ export function InquiryForm({
         <div className="mx-auto flex size-14 items-center justify-center border border-[#EF8557] bg-[#226192] text-[#EF8557]">
           <CheckCircle2 className="size-8" />
         </div>
-        <p className="label-track mt-6 text-[#EF8557]">Enquiry Received & Dispatched</p>
+        <p className="label-track mt-6 text-[#EF8557]">
+          {emailSentByServer ? "Enquiry Received & Dispatched" : "Enquiry Recorded · Manual Email Fallback"}
+        </p>
         <h3 className="mt-2 font-['Space_Grotesk'] text-2xl font-bold uppercase text-[#226192] sm:text-3xl">
           Thank you.
         </h3>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-[#252525]/80">
-          Your enquiry has been received and emailed directly to our factory desk ({COMPANY_OWNER_EMAIL}).
-          Our team from Muthu International will get in touch within 24 hours.
+          {emailSentByServer
+            ? `Your enquiry has been received and emailed directly to our factory desk (${COMPANY_OWNER_EMAIL}). Our team from Muthu International will get in touch within 24 hours.`
+            : dispatchMessage ||
+            `We recorded your enquiry, but automated server email delivery was unavailable. Please click below to send it directly to ${COMPANY_OWNER_EMAIL} via your email app.`}
         </p>
-        <button
-          className="mt-8 border border-[#226192] bg-[#226192] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#FFFFFF] transition-colors hover:bg-[#EF8557] hover:border-[#EF8557]"
-          onClick={() => {
-            setSent(false);
-            setFullName("");
-            setCompanyName("");
-            setEmail("");
-            setPhone("");
-            setCityState("");
-            setMessage("");
-          }}
-        >
-          Submit Another Enquiry
-        </button>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          {!emailSentByServer && (
+            <a
+              href={fallbackMailtoUrl}
+              className="border border-[#EF8557] bg-[#EF8557] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#FFFFFF] transition-colors hover:bg-[#226192] hover:border-[#226192]"
+            >
+              Send via Email App
+            </a>
+          )}
+          <button
+            className="border border-[#226192] bg-[#226192] px-6 py-3 text-xs font-bold uppercase tracking-widest text-[#FFFFFF] transition-colors hover:bg-[#EF8557] hover:border-[#EF8557]"
+            onClick={() => {
+              setSent(false);
+              setFullName("");
+              setCompanyName("");
+              setEmail("");
+              setPhone("");
+              setCityState("");
+              setMessage("");
+            }}
+          >
+            Submit Another Enquiry
+          </button>
+        </div>
       </div>
     );
   }
@@ -1691,8 +1728,8 @@ export function InquiryForm({
           required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
-          placeholder="e.g. Eleanor Vance"
+          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
+          placeholder="Enter your full name"
         />
       </label>
 
@@ -1702,8 +1739,8 @@ export function InquiryForm({
           required
           value={companyName}
           onChange={(e) => setCompanyName(e.target.value)}
-          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
-          placeholder="e.g. Bloom & Co. Kidswear"
+          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
+          placeholder="Enter company or retail store name"
         />
       </label>
 
@@ -1714,7 +1751,7 @@ export function InquiryForm({
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
+          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
           placeholder="name@company.com"
         />
       </label>
@@ -1726,8 +1763,8 @@ export function InquiryForm({
           type="tel"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
-          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
-          placeholder="+91 97878 06802"
+          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
+          placeholder="+91 XXXXX XXXXX"
         />
       </label>
 
@@ -1737,7 +1774,7 @@ export function InquiryForm({
           required
           value={cityState}
           onChange={(e) => setCityState(e.target.value)}
-          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
+          className="h-12 rounded-none border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm text-[#252525] placeholder:text-[#252525]/45 focus:border-[#226192] focus:ring-1 focus:ring-[#226192]"
           placeholder="Your city and state"
         />
       </label>
@@ -1747,7 +1784,7 @@ export function InquiryForm({
         <select
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
-          className="h-12 border border-[#226192]/25 bg-[#FFFFFF] px-4 text-xs font-semibold text-[#226192] focus:border-[#226192] focus:outline-none"
+          className="h-12 rounded-none border border-[#226192]/25 bg-[#FFFFFF] px-4 text-sm font-medium text-[#252525] focus:border-[#226192] focus:ring-1 focus:ring-[#226192] focus:outline-none cursor-pointer"
         >
           <option value="Kids Korner">Kids Korner (Flagship Kidswear)</option>
           <option value="X-Zone">X-Zone (Athleisure & Streetwear)</option>

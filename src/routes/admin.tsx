@@ -264,7 +264,7 @@ function AdminDashboardPage() {
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();
-    const validPins = ["2000", "97878", "MUTHU2026", "admin2026"];
+    const validPins = ["2299"];
     if (validPins.includes(pinInput.trim())) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("muthu_admin_auth", "true");
@@ -314,7 +314,7 @@ function AdminDashboardPage() {
                   setPinInput(e.target.value);
                   setPinError("");
                 }}
-                placeholder="Enter Master PIN (e.g. 2000)"
+                placeholder="Enter Master PIN"
                 className="h-12 text-center text-lg tracking-[0.25em] font-mono rounded-none border-[#226192]/40 focus:border-[#226192]"
               />
               {pinError && (
@@ -330,8 +330,7 @@ function AdminDashboardPage() {
             </Button>
           </form>
 
-          <div className="mt-6 border-t border-[#226192]/10 pt-4 flex items-center justify-between text-xs text-[#252525]/60">
-            <span>Default Master PIN: <strong>2000</strong></span>
+          <div className="mt-6 border-t border-[#226192]/10 pt-4 flex items-center justify-center text-xs text-[#252525]/60">
             <Link to="/" className="text-[#226192] hover:text-[#EF8557] font-semibold underline">
               Back to Store
             </Link>

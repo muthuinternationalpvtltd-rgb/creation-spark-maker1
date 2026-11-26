@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, Phone, MapPin, ArrowRight, Send, BriefcaseBusiness } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, Send, BriefcaseBusiness, ExternalLink, Clock } from "lucide-react";
 import { InquiryForm, Reveal } from "@/components/site";
 import {
   COMPANY_ADDRESS_CITY,
@@ -11,6 +11,10 @@ import {
   COMPANY_SECONDARY_EMAIL,
   COMPANY_SECONDARY_MOBILE,
 } from "@/lib/content";
+
+const GOOGLE_MAPS_LINK = "https://maps.app.goo.gl/ftatMFEkx6qjgJp29?g_st=aw";
+const GOOGLE_MAPS_EMBED_URL =
+  "https://maps.google.com/maps?q=Muthu%20International%20Private%20Limited%2C%2014%2F2%20Asher%20Nagar%2C%20North%201st%20Street%2C%20Avinashi%20Road%2C%20Tirupur%20641603&t=&z=16&ie=UTF8&iwloc=&output=embed";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -112,7 +116,12 @@ function ContactPage() {
             </Reveal>
 
             <Reveal className="border-b border-[#226192]/18 sm:border-b-0 sm:odd:border-r lg:border-r lg:last:border-r-0">
-              <div className="flex min-h-72 flex-col p-6 sm:p-8">
+              <a
+                href={GOOGLE_MAPS_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex min-h-72 flex-col p-6 sm:p-8"
+              >
                 <MapPin className="size-6 text-[#EF8557]" />
                 <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">Visit Our Office</p>
                 <div className="mt-4 space-y-1 text-base leading-relaxed text-[#252525]/85">
@@ -120,7 +129,10 @@ function ContactPage() {
                   <p>{COMPANY_ADDRESS_LINE1}</p>
                   <p>{COMPANY_ADDRESS_CITY}</p>
                 </div>
-              </div>
+                <span className="mt-auto inline-flex items-center gap-2 pt-8 text-xs font-bold uppercase tracking-[0.12em] text-[#226192]">
+                  View on Google Maps <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </a>
             </Reveal>
 
             <Reveal>
@@ -138,6 +150,87 @@ function ContactPage() {
                 </div>
               </div>
             </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FACTORY & OFFICE LOCATION MAP ═══ */}
+      <section id="location" className="border-y border-[#226192]/15 bg-[#FFFFFF] py-16 sm:py-24">
+        <div className="page-shell">
+          <Reveal>
+            <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#EF8557]">
+                  Find Us
+                </p>
+                <h2 className="mt-3 text-3xl leading-[1.08] text-[#226192] sm:text-4xl">
+                  Factory &amp; Head Office Location
+                </h2>
+              </div>
+              <a
+                href={GOOGLE_MAPS_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-11 items-center gap-2 border border-[#226192] bg-[#226192] px-5 text-xs font-bold uppercase tracking-[0.14em] text-[#FFFFFF] transition-colors hover:border-[#EF8557] hover:bg-[#EF8557] self-start sm:self-auto"
+              >
+                <MapPin className="size-4" />
+                Open in Google Maps
+                <ExternalLink className="size-3.5" />
+              </a>
+            </div>
+          </Reveal>
+
+          <div className="grid border border-[#226192]/20 lg:grid-cols-12">
+            <div className="lg:col-span-4 flex flex-col justify-between bg-[#F7F4EE] p-6 sm:p-8 border-b lg:border-b-0 lg:border-r border-[#226192]/20">
+              <div className="space-y-6">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#EF8557]">
+                    Registered Address
+                  </p>
+                  <p className="mt-2 font-semibold text-base text-[#226192]">{COMPANY_NAME}</p>
+                  <p className="mt-1 text-sm leading-relaxed text-[#252525]/80">
+                    {COMPANY_ADDRESS_LINE1}
+                    <br />
+                    {COMPANY_ADDRESS_CITY}
+                  </p>
+                </div>
+
+                <div className="border-t border-[#226192]/15 pt-5">
+                  <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.18em] text-[#226192]">
+                    <Clock className="size-4 text-[#EF8557]" />
+                    <span>Visiting Hours</span>
+                  </div>
+                  <p className="mt-2 text-sm text-[#252525]/80">
+                    Monday – Saturday: 9:30 AM – 6:30 PM IST
+                  </p>
+                  <p className="mt-1 text-xs text-[#252525]/60">
+                    Appointments recommended for factory tours and sample reviews.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-[#226192]/15">
+                <a
+                  href={GOOGLE_MAPS_LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[#226192] hover:text-[#EF8557] transition-colors"
+                >
+                  Get Directions <ArrowRight className="size-4" />
+                </a>
+              </div>
+            </div>
+
+            <div className="lg:col-span-8 min-h-[340px] sm:min-h-[420px] bg-[#EAE6DE]">
+              <iframe
+                title="Muthu International Private Limited Location Map"
+                src={GOOGLE_MAPS_EMBED_URL}
+                className="h-full w-full min-h-[340px] sm:min-h-[420px] border-0"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Check,
   ShieldCheck,
@@ -8,7 +8,9 @@ import {
   Scissors,
   Sparkles,
   Box,
+  ArrowRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { CTASection, Reveal, SectionHeading } from "@/components/site";
 import { images } from "@/lib/content";
 
@@ -80,39 +82,73 @@ const qualityStages = [
 function QualityPage() {
   return (
     <div className="bg-[#EAE6DE] text-[#252525]">
-      {/* ═══ CENTERED HERO WITH IMAGE BAND ═══ */}
-      <section className="relative overflow-hidden bg-[#EAE6DE] pt-32 pb-0 sm:pt-40">
-        {/* Text centered */}
-        <div className="page-shell relative z-10 text-center">
-          <div className="mx-auto flex items-center justify-center gap-2 text-[#EF8557]">
-            <ShieldCheck className="size-4" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.25em]">
-              Quality & Compliance
-            </span>
-          </div>
+      {/* ═══ EDITORIAL HERO WITH FRAMED INSPECTION VISUAL ═══ */}
+      <section className="relative overflow-hidden bg-[#EAE6DE] pt-28 pb-16 sm:pt-36 sm:pb-24 border-b border-[#226192]/15">
+        <div className="page-shell relative z-10">
+          <div className="grid gap-12 lg:grid-cols-12 items-center">
+            {/* Left Copy */}
+            <div className="lg:col-span-7">
+              <Reveal>
+                <div className="inline-flex items-center gap-2 border border-[#226192]/20 bg-[#FFFFFF] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[#226192] shadow-sm">
+                  <span className="size-1.5 bg-[#EF8557]" />
+                  Quality &amp; Compliance · 8-Stage Verification
+                </div>
 
-          <h1 className="mx-auto mt-6 max-w-4xl font-serif text-4xl font-bold uppercase leading-tight tracking-tight text-[#252525] sm:text-6xl lg:text-7xl">
-            Quality in every
-            <br />
-            <span className="text-[#EF8557]">garment.</span>
-          </h1>
+                <h1 className="mt-6 text-4xl font-bold uppercase leading-tight tracking-tight text-[#252525] sm:text-6xl lg:text-7xl">
+                  Quality In Every
+                  <br />
+                  <span className="text-[#EF8557]">Garment.</span>
+                </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-[#252525]/75">
-            We focus on consistent product quality, customer requirements and applicable statutory
-            and industry standards.
-          </p>
-        </div>
+                <p className="mt-6 max-w-2xl text-base leading-relaxed text-[#252525]/85 sm:text-lg">
+                  We focus on consistent product quality, customer requirements, and applicable
+                  statutory and industry standards across every stage of production.
+                </p>
 
-        {/* Full width image band */}
-        <div className="relative mt-14 overflow-hidden">
-          <div className="aspect-[21/9] sm:aspect-[3/1]">
-            <img
-              src={images.pageQuality}
-              alt="Quality control inspection at Muthu International"
-              className="size-full object-cover"
-              fetchPriority="high"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#EAE6DE] via-transparent to-[#EAE6DE]/30" />
+                <div className="mt-8 flex flex-wrap items-center gap-4">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="border border-[#226192] bg-[#226192] font-bold text-[#FFFFFF] shadow-sm hover:bg-[#1B4E75]"
+                  >
+                    <Link to="/manufacturing" className="flex items-center gap-2">
+                      <span>Explore Manufacturing</span>
+                      <ArrowRight className="size-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="lg"
+                    className="border-[#226192]/30 bg-[#FFFFFF] text-[#226192] hover:border-[#EF8557] hover:text-[#EF8557]"
+                  >
+                    <Link to="/request-quote">
+                      <span>Request Quality Dossier</span>
+                    </Link>
+                  </Button>
+                </div>
+              </Reveal>
+            </div>
+
+            {/* Right: Framed Quality Visual */}
+            <div className="lg:col-span-5">
+              <Reveal>
+                <div className="relative overflow-hidden border border-[#226192]/25 bg-[#FFFFFF] p-3 shadow-lg">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={images.pageQuality}
+                      alt="Quality control inspection at Muthu International"
+                      className="size-full object-cover transition-transform duration-700 hover:scale-105"
+                      fetchPriority="high"
+                    />
+                  </div>
+                  <div className="mt-3 flex items-center justify-between px-1 text-[10px] font-bold uppercase tracking-widest text-[#226192]">
+                    <span>0% Azo Dyes · Child-Safe</span>
+                    <span className="text-[#EF8557]">100% Piece Inspection</span>
+                  </div>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </div>
       </section>

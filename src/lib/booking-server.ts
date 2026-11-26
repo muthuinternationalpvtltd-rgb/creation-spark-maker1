@@ -106,7 +106,7 @@ async function readWebhookEchoResponse(
   let lastErr: unknown;
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
-      const followRes = await fetchWithTimeout(echoUrl, { method: "GET" }, 3500);
+      const followRes = await fetchWithTimeout(echoUrl, { method: "GET" }, 8000);
       const text = await followRes.text();
       const trimmed = text.trim();
       const isHtml = trimmed.startsWith("<");
@@ -158,7 +158,7 @@ async function postWebhookWithRetry(
           body: payloadStr,
           redirect: "manual",
         },
-        3500,
+        8000,
       );
 
       if (res.status >= 300 && res.status < 400) {
@@ -404,9 +404,126 @@ export interface InquiryData {
   message: string;
 }
 
+async function dispatchFallbackEmailProviders({
+  env,
+  subject,
+  body,
+  replyToEmail,
+  replyToName,
+  senderLabel,
+}: {
+  env: NodeJS.ProcessEnv | undefined;
+  subject: string;
+  body: string;
+  replyToEmail: string;
+  replyToName: string;
+  senderLabel: string;
+}): Promise<BookingNotificationResult | null> {
+  const resendApiKey = env?.["RESEND_API_KEY"]?.trim();
+  const brevoApiKey = env?.["BREVO_API_KEY"]?.trim();
+  const web3FormsKey = env?.["WEB3FORMS_ACCESS_KEY"]?.trim();
+
+  if (resendApiKey) {
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: env?.["RESEND_FROM_EMAIL"] || `${senderLabel} <onboarding@resend.dev>`,
+          to: [COMPANY_OWNER_EMAIL],
+          reply_to: replyToEmail,
+          subject,
+          text: body,
+        }),
+      });
+      if (res.ok) {
+        return {
+          success: true,
+          emailSentByServer: true,
+          provider: "Resend API",
+          ownerEmail: COMPANY_OWNER_EMAIL,
+          message: `Email automatically sent to ${COMPANY_OWNER_EMAIL} via Resend.`,
+        };
+      }
+      console.warn(`[booking-server] Resend failed (${res.status}):`, await res.text());
+    } catch (err) {
+      console.warn("[booking-server] Resend email dispatch failed:", err);
+    }
+  }
+
+  if (brevoApiKey) {
+    try {
+      const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+        method: "POST",
+        headers: {
+          "api-key": brevoApiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          sender: {
+            name: senderLabel,
+            email: env?.["BREVO_SENDER_EMAIL"] || COMPANY_OWNER_EMAIL,
+          },
+          to: [{ email: COMPANY_OWNER_EMAIL, name: "Muthu International Owner Desk" }],
+          replyTo: { email: replyToEmail, name: replyToName },
+          subject,
+          textContent: body,
+        }),
+      });
+      if (res.ok) {
+        return {
+          success: true,
+          emailSentByServer: true,
+          provider: "Brevo API",
+          ownerEmail: COMPANY_OWNER_EMAIL,
+          message: `Email automatically sent to ${COMPANY_OWNER_EMAIL} via Brevo.`,
+        };
+      }
+      console.warn(`[booking-server] Brevo failed (${res.status}):`, await res.text());
+    } catch (err) {
+      console.warn("[booking-server] Brevo dispatch failed:", err);
+    }
+  }
+
+  if (web3FormsKey) {
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          access_key: web3FormsKey,
+          subject,
+          from_name: `${replyToName} (${senderLabel})`,
+          replyto: replyToEmail,
+          message: body,
+        }),
+      });
+      if (res.ok) {
+        return {
+          success: true,
+          emailSentByServer: true,
+          provider: "Web3Forms",
+          ownerEmail: COMPANY_OWNER_EMAIL,
+          message: `Email automatically sent to ${COMPANY_OWNER_EMAIL} via Web3Forms.`,
+        };
+      }
+    } catch (err) {
+      console.warn("[booking-server] Web3Forms dispatch failed:", err);
+    }
+  }
+
+  return null;
+}
+
 export const submitInquiryEmailFn = createServerFn({ method: "POST" })
   .validator((data: InquiryData) => data)
-  .handler(async ({ data }): Promise<{ success: boolean; message: string }> => {
+  .handler(async ({ data }): Promise<BookingNotificationResult> => {
     try {
       const subject = `[${data.kind === "quote" ? "Quote Request" : "Contact Enquiry"}] ${data.fullName} - ${data.brand}`;
       const body = `MUTHU INTERNATIONAL FACTORY DESK NOTIFICATION
@@ -443,13 +560,44 @@ Muthu International Private Limited · Tirupur, India`;
           message: body,
           inquiry: data,
         });
-        await postWebhookWithRetry(webhookUrl, payloadStr);
+        const webhookResult = await postWebhookWithRetry(webhookUrl, payloadStr);
+        if (webhookResult.ok) {
+          console.info(`[booking-server] Inquiry email dispatched via Webhook -> ${COMPANY_OWNER_EMAIL}`);
+          return {
+            success: true,
+            emailSentByServer: true,
+            provider: "Webhook / Gmail Script",
+            ownerEmail: COMPANY_OWNER_EMAIL,
+            message: `Enquiry automatically emailed to ${COMPANY_OWNER_EMAIL}.`,
+          };
+        }
+        console.warn(`[booking-server] Inquiry webhook failed: ${webhookResult.detail}`);
       }
 
-      return { success: true, message: "Enquiry submitted successfully" };
+      const fallbackRes = await dispatchFallbackEmailProviders({
+        env,
+        subject,
+        body,
+        replyToEmail: data.email,
+        replyToName: data.fullName,
+        senderLabel: "Muthu International Enquiries",
+      });
+      if (fallbackRes) return fallbackRes;
+
+      return {
+        success: true,
+        emailSentByServer: false,
+        ownerEmail: COMPANY_OWNER_EMAIL,
+        message: `Enquiry recorded, but automated server email could not be delivered. Please send directly to ${COMPANY_OWNER_EMAIL}.`,
+      };
     } catch (err) {
       console.warn("[booking-server] Inquiry dispatch failed:", err);
-      return { success: true, message: "Enquiry recorded" };
+      return {
+        success: true,
+        emailSentByServer: false,
+        ownerEmail: COMPANY_OWNER_EMAIL,
+        message: `Enquiry recorded, but automated server email failed. Please email ${COMPANY_OWNER_EMAIL} directly.`,
+      };
     }
   });
 
@@ -468,7 +616,7 @@ export interface WholesaleData {
 
 export const submitWholesaleEmailFn = createServerFn({ method: "POST" })
   .validator((data: WholesaleData) => data)
-  .handler(async ({ data }): Promise<{ success: boolean; message: string }> => {
+  .handler(async ({ data }): Promise<BookingNotificationResult> => {
     try {
       const subject = `[B2B Wholesale Brief] ${data.companyName} (${data.contactPerson}) - ${data.estimatedQuantity}`;
       const body = `MUTHU INTERNATIONAL WHOLESALE / B2B BRIEF
@@ -508,13 +656,43 @@ Muthu International Private Limited · 14/2 Asher Nagar, Tirupur - 641603`;
           message: body,
           wholesale: data,
         });
-        await postWebhookWithRetry(webhookUrl, payloadStr);
+        const webhookResult = await postWebhookWithRetry(webhookUrl, payloadStr);
+        if (webhookResult.ok) {
+          return {
+            success: true,
+            emailSentByServer: true,
+            provider: "Webhook / Gmail Script",
+            ownerEmail: COMPANY_OWNER_EMAIL,
+            message: `Wholesale brief automatically emailed to ${COMPANY_OWNER_EMAIL}.`,
+          };
+        }
+        console.warn(`[booking-server] Wholesale webhook failed: ${webhookResult.detail}`);
       }
 
-      return { success: true, message: "Wholesale brief submitted successfully" };
+      const fallbackRes = await dispatchFallbackEmailProviders({
+        env,
+        subject,
+        body,
+        replyToEmail: data.email,
+        replyToName: data.contactPerson,
+        senderLabel: "Muthu International Wholesale",
+      });
+      if (fallbackRes) return fallbackRes;
+
+      return {
+        success: true,
+        emailSentByServer: false,
+        ownerEmail: COMPANY_OWNER_EMAIL,
+        message: `Wholesale brief logged, but automated server email could not be delivered.`,
+      };
     } catch (err) {
       console.warn("[booking-server] Wholesale dispatch failed:", err);
-      return { success: true, message: "Wholesale brief logged" };
+      return {
+        success: true,
+        emailSentByServer: false,
+        ownerEmail: COMPANY_OWNER_EMAIL,
+        message: `Wholesale brief logged, but automated email failed.`,
+      };
     }
   });
 
