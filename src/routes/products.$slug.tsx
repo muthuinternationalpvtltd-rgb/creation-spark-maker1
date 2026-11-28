@@ -36,7 +36,7 @@ import {
   type ProductVariant,
   type ProductReview,
 } from "@/lib/content";
-import { buildSeoHead } from "@/lib/seo";
+import { buildSeoHead, buildProductJsonLd } from "@/lib/seo";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: ({ params }) => {
@@ -55,6 +55,7 @@ export const Route = createFileRoute("/products/$slug")({
       path: `/products/${loaderData?.slug ?? params.slug}`,
       ogTitle: loaderData?.name ?? "Muthu International Product",
       ogType: "product",
+      ogImage: loaderData?.image,
       breadcrumbs: [
         { name: "Home", path: "/" },
         { name: "Products", path: "/products" },
@@ -62,6 +63,7 @@ export const Route = createFileRoute("/products/$slug")({
           ? [{ name: loaderData.name, path: `/products/${loaderData.slug}` }]
           : []),
       ],
+      extraJsonLd: loaderData ? [buildProductJsonLd(loaderData)] : undefined,
     }),
   component: ProductDetailPage,
 });

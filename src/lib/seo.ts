@@ -5,7 +5,7 @@ import {
   COMPANY_PRIMARY_MOBILE,
   brandsList,
 } from "./ecommerce";
-import { collections, products } from "./content";
+import { collections, products, type Product } from "./content";
 
 export const SITE_URL = "https://muthu-international-private-limited.com";
 export const SITE_NAME = COMPANY_NAME;
@@ -22,12 +22,49 @@ export function getCanonicalUrl(path: string): string {
   return normalized === "/" ? `${SITE_URL}/` : `${SITE_URL}${normalized}`;
 }
 
-function toAbsoluteUrl(urlOrPath?: string): string {
+export function toAbsoluteUrl(urlOrPath?: string): string {
   if (!urlOrPath) return DEFAULT_OG_IMAGE;
   if (urlOrPath.startsWith("http://") || urlOrPath.startsWith("https://")) return urlOrPath;
   const normalized = urlOrPath.startsWith("/") ? urlOrPath : `/${urlOrPath}`;
   return `${SITE_URL}${normalized}`;
 }
+
+export const DEFAULT_MERCHANT_RETURN_POLICY = {
+  "@type": "MerchantReturnPolicy",
+  applicableCountry: "IN",
+  returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+  merchantReturnDays: 7,
+  returnMethod: "https://schema.org/ReturnByMail",
+  returnFees: "https://schema.org/FreeReturn",
+};
+
+export const DEFAULT_SHIPPING_DETAILS = {
+  "@type": "OfferShippingDetails",
+  shippingRate: {
+    "@type": "MonetaryAmount",
+    value: "0",
+    currency: "INR",
+  },
+  shippingDestination: {
+    "@type": "DefinedRegion",
+    addressCountry: "IN",
+  },
+  deliveryTime: {
+    "@type": "ShippingDeliveryTime",
+    handlingTime: {
+      "@type": "QuantitativeValue",
+      minValue: 1,
+      maxValue: 2,
+      unitCode: "d",
+    },
+    transitTime: {
+      "@type": "QuantitativeValue",
+      minValue: 2,
+      maxValue: 5,
+      unitCode: "d",
+    },
+  },
+};
 
 export interface BreadcrumbItem {
   name: string;
@@ -101,7 +138,17 @@ export function buildBrandJsonLd(brand: (typeof brandsList)[number]) {
 
 export function buildBrandProductListJsonLd(
   brand: (typeof brandsList)[number],
-  brandProducts: { name: string; slug: string; price: number; description: string; image: string }[],
+  brandProducts: {
+    name: string;
+    slug: string;
+    price: number;
+    description: string;
+    image: string;
+    sku?: string;
+    rating?: number;
+    reviewCount?: number;
+    galleryImages?: string[];
+  }[],
 ) {
   return {
     "@context": "https://schema.org",
@@ -110,24 +157,115 @@ export function buildBrandProductListJsonLd(
     description: brand.description,
     url: getCanonicalUrl(`/brands/${brand.slug}`),
     numberOfItems: brandProducts.length,
-    itemListElement: brandProducts.slice(0, 10).map((p, idx) => ({
-      "@type": "ListItem",
-      position: idx + 1,
-      item: {
-        "@type": "Product",
-        name: p.name,
-        url: getCanonicalUrl(`/products/${p.slug}`),
-        description: p.description,
-        brand: { "@type": "Brand", name: brand.name },
-        manufacturer: { "@type": "Organization", name: COMPANY_NAME },
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "INR",
-          price: p.price,
-          availability: "https://schema.org/InStock",
+    itemListElement: brandProducts.slice(0, 10).map((p, idx) => {
+      const imagesList = Array.from(
+        new Set([
+          toAbsoluteUrl(p.image),
+          ...(p.galleryImages || []).map((img) => toAbsoluteUrl(img)),
+        ]),
+      ).filter(Boolean);
+
+      return {
+        "@type": "ListItem",
+        position: idx + 1,
+        item: {
+          "@type": "Product",
+          name: p.name,
+          url: getCanonicalUrl(`/products/${p.slug}`),
+          image: imagesList.length > 1 ? imagesList : imagesList[0],
+          description: p.description,
+          sku: p.sku || p.slug,
+          mpn: p.sku || p.slug,
+          brand: {
+            "@type": "Brand",
+            name: brand.name,
+          },
+          manufacturer: {
+            "@type": "Organization",
+            name: COMPANY_NAME,
+            url: `${SITE_URL}/`,
+          },
+          offers: {
+            "@type": "Offer",
+            url: getCanonicalUrl(`/products/${p.slug}`),
+            priceCurrency: "INR",
+            price: p.price,
+            availability: "https://schema.org/InStock",
+            itemCondition: "https://schema.org/NewCondition",
+            priceValidUntil: "2027-12-31",
+            seller: {
+              "@type": "Organization",
+              name: COMPANY_NAME,
+            },
+            hasMerchantReturnPolicy: DEFAULT_MERCHANT_RETURN_POLICY,
+            shippingDetails: DEFAULT_SHIPPING_DETAILS,
+          },
+          ...(p.rating && p.reviewCount
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: p.rating,
+                  reviewCount: p.reviewCount,
+                },
+              }
+            : {}),
         },
+      };
+    }),
+  };
+}
+
+export function buildProductJsonLd(product: Product) {
+  const imagesList = Array.from(
+    new Set([
+      toAbsoluteUrl(product.image),
+      ...(product.galleryImages || []).map((img) => toAbsoluteUrl(img)),
+    ]),
+  ).filter(Boolean);
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    url: getCanonicalUrl(`/products/${product.slug}`),
+    image: imagesList.length > 1 ? imagesList : imagesList[0],
+    description: product.description,
+    sku: product.sku || product.slug,
+    mpn: product.sku || product.slug,
+    category: product.category,
+    brand: {
+      "@type": "Brand",
+      name: product.brandName,
+    },
+    manufacturer: {
+      "@type": "Organization",
+      name: COMPANY_NAME,
+      url: `${SITE_URL}/`,
+    },
+    offers: {
+      "@type": "Offer",
+      url: getCanonicalUrl(`/products/${product.slug}`),
+      priceCurrency: "INR",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      priceValidUntil: "2027-12-31",
+      seller: {
+        "@type": "Organization",
+        name: COMPANY_NAME,
       },
-    })),
+      hasMerchantReturnPolicy: DEFAULT_MERCHANT_RETURN_POLICY,
+      shippingDetails: DEFAULT_SHIPPING_DETAILS,
+    },
+    ...(product.rating && product.reviewCount
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: product.rating,
+            reviewCount: product.reviewCount,
+          },
+        }
+      : {}),
   };
 }
 
